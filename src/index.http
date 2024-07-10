@@ -1,0 +1,92 @@
+######### REGISTER
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name":"A Srinivas Prasad",
+  "email":"srinivas@yopmail.com",
+  "password":"Srinivas@8",
+  "phone":"917995643201",
+  "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/v1717485958/jyqgeifwqktlyzkgvr7n.png",
+  "bio":"A MERN stack developer with 2+ years of experience...",
+  "isAdmin":true
+}
+
+######### LOGIN
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "emailOrPhone":"917995643201",
+  "password":"SrinivasAkella@14"
+}
+
+######## GET ALL USERS
+GET http://localhost:5000/api/auth
+Content-Type: application/json
+
+######### GET USER WITH ID
+GET http://localhost:5000/api/auth/668ea8f5f291ce9483b65f83
+Content-Type: application/json
+
+####### UPDATE USER WITH ID
+PATCH http://localhost:5000/api/auth/668ea8f5f291ce9483b65f83
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+
+{
+  "name":"Srinivas Akella",
+  "email":"srinivas.akella@yopmail.com",
+  "phone":"917995643201",
+  "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/v1717485958/jyqgeifwqktlyzkgvr7n.png",
+  "bio":"A MERN & FULL stack developer with 2+ years of experience...",
+  "isAdmin":false
+}
+
+######## UPDATE PASSWORD
+PATCH http://localhost:5000/api/auth/668ea8f5f291ce9483b65f83/updatePassword
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+
+{
+  "oldPassword":"Srinivas@8",
+  "newPassword":"SrinivasAkella@14"
+}
+
+########### DELETE USER
+DELETE http://localhost:5000/api/auth/668d5526c8384ea46e296a7f/delete
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+
+############# CREATE QA
+POST http://localhost:5000/api/qa/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+
+{
+  "question":"What is ReactJS ?",
+  "answer":"ReactJS is a javascript library that is used to build user interfaces with advanced logics and animations with management of state, props and api integration.",
+  "toolId":"3",
+  "userId":"668ea8f5f291ce9483b65f83"
+}
+
+############ GET QA BY TOOL ID
+GET http://localhost:5000/api/qa/668ea8f5f291ce9483b65f83/2
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+
+############## UPDATE QA 
+PATCH http://localhost:5000/api/qa/668eae7d6d917c9032e4832a/668ea8f5f291ce9483b65f83
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+
+{
+  "question":"What is React ?",
+  "answer":"React is a JavaScript library that is used to build/develop user interfaces.",
+  "toolId":"3"
+}
+
+############# DELETE QA
+DELETE http://localhost:5000/api/qa/668eae7d6d917c9032e4832a/668ea8f5f291ce9483b65f83
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
