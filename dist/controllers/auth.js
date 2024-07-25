@@ -17,6 +17,7 @@ const User_1 = __importDefault(require("../models/User"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const registerEmail_1 = require("../helpers/registerEmail");
+const sendLoginEmail_1 = require("../helpers/sendLoginEmail");
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password, phone, profilePicture, bio, isAdmin } = req.body;
@@ -71,6 +72,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             userId: existingUser._id,
             isAdmin: existingUser.isAdmin,
         }, process.env.SECRET_TOKEN);
+        (0, sendLoginEmail_1.sendLoginEmail)(existingUser.email, existingUser.name);
         res.status(200).json({
             message: "Login Success ✅",
             token: token,

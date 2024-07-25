@@ -13,23 +13,21 @@ const userSchema = new mongoose.Schema(
 		},
 		password: {
 			type: String,
-			required: true,
 		},
 		profilePicture: {
 			type: String,
-			required: true,
 		},
 		phone: {
 			type: String,
-			required: true,
 		},
 		bio: {
 			type: String,
-			required: true,
 		},
 		isAdmin: {
 			type: Boolean,
-			required: true,
+		},
+		googleId: {
+			type: String,
 		},
 	},
 	{ timestamps: true }

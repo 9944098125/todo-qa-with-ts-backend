@@ -3,13 +3,12 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-  "name":"A Srinivas Prasad",
-  "email":"srinivas@yopmail.com",
+  "name":"K Sravanthi",
+  "email":"sravs@yopmail.com",
   "password":"Srinivas@8",
-  "phone":"917995643201",
-  "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/v1717485958/jyqgeifwqktlyzkgvr7n.png",
-  "bio":"A MERN stack developer with 2+ years of experience...",
-  "isAdmin":true
+  "phone":"917996543021",
+  "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/v1720865877/gkfphz7dd4kru4eiwmbx.jpg",
+  "bio":"Job Seeker"
 }
 
 ######### LOGIN
@@ -17,8 +16,8 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-  "emailOrPhone":"917995643201",
-  "password":"SrinivasAkella@14"
+  "emailOrPhone":"srinivas@yopmail.com",
+  "password":"Srinivas@8"
 }
 
 ######## GET ALL USERS
@@ -54,9 +53,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 }
 
 ########### DELETE USER
-DELETE http://localhost:5000/api/auth/668d5526c8384ea46e296a7f/delete
+DELETE http://localhost:5000/api/auth/669106bdd60d4cdbe4ca7a42/delete
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3ODA4ODN9.zGMNWU1QJGC9xfJf4oYpSp60bZBSqvPiZ8WqkTPI4Ro
 
 ############# CREATE QA
 POST http://localhost:5000/api/qa/create
@@ -71,12 +70,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 }
 
 ############ GET QA BY TOOL ID
-GET http://localhost:5000/api/qa/668ea8f5f291ce9483b65f83/2
+GET http://localhost:5000/api/qa/668ea8f5f291ce9483b65f83/3
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
 ############## UPDATE QA 
-PATCH http://localhost:5000/api/qa/668eae7d6d917c9032e4832a/668ea8f5f291ce9483b65f83
+PATCH http://localhost:5000/api/qa/66916b8c04b5fc4216f00068/668ea8f5f291ce9483b65f83
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
@@ -90,3 +89,56 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 DELETE http://localhost:5000/api/qa/668eae7d6d917c9032e4832a/668ea8f5f291ce9483b65f83
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
+
+############# CREATE TODO
+POST http://localhost:5000/api/todo/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3ODA5ODh9.W0d90MBCpCeGhsx7zbHy6fRC97kfGof8NLSICLzcTRs
+
+{
+  "title":"Learn NodeJS",
+  "description":"A Sample description",
+  "deadline":"2024-07-25",
+  "userId":"669106bdd60d4cdbe4ca7a42",
+  "urgency":false
+}
+
+############# GET TODO WITH USERID
+GET http://localhost:5000/api/todo/669106bdd60d4cdbe4ca7a42
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3ODA5ODh9.W0d90MBCpCeGhsx7zbHy6fRC97kfGof8NLSICLzcTRs
+
+
+############### UPDATE TODO
+PATCH http://localhost:5000/api/todo/66910a4b287a7f85ea4c5fd0
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3OTk3NDR9.-63Qg1mjJOkrqw-RsxyFGDMxjHSjx0b2oQwU55ghyhE
+
+{
+  "title":"Learn JavaScript",
+  "description":"A Sample description on learning React with Typescript",
+  "deadline":"2024-07-25",
+  "userId":"669106bdd60d4cdbe4ca7a42",
+  "urgency":true
+}
+
+########## DELETE TODO
+DELETE http://localhost:5000/api/todo/66910a4b287a7f85ea4c5fd0/669106bdd60d4cdbe4ca7a42
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3OTk3NDR9.-63Qg1mjJOkrqw-RsxyFGDMxjHSjx0b2oQwU55ghyhE
+
+############ CREATED USER BY ADMIN
+POST http://localhost:5000/api/admin/createUser/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
+
+{
+  "name":"A Ravi Kiran",
+  "email":"ark@yopmail.com",
+  "password":"Srinivas@8",
+  "phone":"918675110136",
+  "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/v1720865268/jnwxv8frftasqbdvvue6.jpg",
+  "bio":"A Devops Engineer with 3+ years of experience...",
+  "isAdmin":true
+}
+

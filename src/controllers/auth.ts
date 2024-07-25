@@ -3,6 +3,7 @@ import bcryptJS from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { sendRegistrationEmail } from "../helpers/registerEmail";
+import { sendLoginEmail } from "../helpers/sendLoginEmail";
 
 export const register = async (
 	req: Request,
@@ -73,6 +74,7 @@ export const login = async (
 			},
 			process.env.SECRET_TOKEN!
 		);
+		sendLoginEmail(existingUser.email, existingUser.name);
 		res.status(200).json({
 			message: "Login Success ✅",
 			token: token,

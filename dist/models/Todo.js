@@ -4,34 +4,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const userSchema = new mongoose_1.default.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    email: {
+const todoSchema = new mongoose_1.default.Schema({
+    title: {
         type: String,
         required: true,
         unique: true,
     },
-    password: {
+    description: {
         type: String,
+        required: true,
     },
-    profilePicture: {
-        type: String,
-    },
-    phone: {
-        type: String,
-    },
-    bio: {
-        type: String,
-    },
-    isAdmin: {
+    urgency: {
         type: Boolean,
+        default: false,
     },
-    googleId: {
+    deadline: {
         type: String,
+        required: true,
+    },
+    userId: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
     },
 }, { timestamps: true });
-const User = mongoose_1.default.models.User || mongoose_1.default.model("User", userSchema);
-exports.default = User;
+const Todo = mongoose_1.default.models.Todo || mongoose_1.default.model("Todo", todoSchema);
+exports.default = Todo;
