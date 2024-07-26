@@ -26,7 +26,7 @@ GET https://todo-qa-with-ts-backend.onrender.com/api/auth
 Content-Type: application/json
 
 ######### GET USER WITH ID
-GET https://todo-qa-with-ts-backend.onrender.com/api/auth/668ea8f5f291ce9483b65f83
+GET https://todo-qa-with-ts-backend.onrender.com/api/auth/66a3d2d6063086539ee99def
 Content-Type: application/json
 
 ####### UPDATE USER WITH ID
@@ -67,7 +67,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
   "question":"What is ReactJS ?",
   "answer":"ReactJS is a javascript library that is used to build user interfaces with advanced logics and animations with management of state, props and api integration.",
   "toolId":"3",
-  "userId":"668ea8f5f291ce9483b65f83"
+  "userId":"66a3d2d6063086539ee99def"
 }
 
 ############ GET QA BY TOOL ID
@@ -142,18 +142,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
   "bio":"Bank Employee"
 }
 
-############ GET ALL USERS
+############ GET ALL USERS BY ADMIN
 GET https://todo-qa-with-ts-backend.onrender.com/api/admin/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
-################# UPDATE USER
+################# UPDATE USER BY ADMIN
 PATCH https://todo-qa-with-ts-backend.onrender.com/api/admin/updateUser/66a3cc0aada193bfc6746445
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
 {
-  "name":"Akella v v Satyanarayana",
+  "name":"A.V.V.Satyanarayana",
   "email":"satya@yopmail.com",
   "password":"Srinivas@8",
   "phone":"919177629841",
@@ -161,11 +161,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
   "bio":"Bank Employee"
 }
 
-########### DELETE A USER
-DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteUser/66a3c72fada193bfc674642b/669250d6c617e4760f3d31f1
+########### DELETE A USER BY ADMIN
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteUser/66a3cc0aada193bfc6746445/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
 
 ########### CREATE QA BY ADMIN
-POST https://todo-qa-with-ts-backend.onrender.com/api/admin/createQA/669250d6c617e4760f3d31f1
+POST https://todo-qa-with-ts-backend.onrender.com/api/admin/createQA/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+
+{
+  "question":"What is NodeJs ?",
+  "answer":"NodeJs is a javascript library that is used to build user interfaces with advanced logics and animations with management of state, props and api integration.",
+  "toolId":"3"
+}
