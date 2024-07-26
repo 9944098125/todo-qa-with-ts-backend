@@ -65,7 +65,6 @@ const getAllUsersList = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.getAllUsersList = getAllUsersList;
 const updatedUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, email, phone, profilePicture, bio, isAdmin } = req.body;
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
@@ -78,19 +77,11 @@ const updatedUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0,
                 message: `This user ${user.name} is also an admin, so you can't make changes to this user 🚫`,
             });
         }
-        yield User_1.default.updateOne({ _id: userId }, {
-            $set: {
-                name,
-                email,
-                phone,
-                profilePicture,
-                bio,
-                isAdmin,
-            },
-        });
+        const updatedUser = yield User_1.default.findByIdAndUpdate(userId, { $set: req.body }, { new: true, runValidators: true });
+        yield updatedUser.save();
         res.status(200).json({
             message: `Hola, ${user.name}, you have updated your profile successfully 🤩`,
-            user: user,
+            user: updatedUser,
         });
     }
     catch (err) {

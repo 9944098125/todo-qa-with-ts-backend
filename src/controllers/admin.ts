@@ -63,7 +63,6 @@ export const updatedUserByAdmin = async (
 	next: NextFunction
 ) => {
 	try {
-		const { name, email, phone, profilePicture, bio, isAdmin } = req.body;
 		const { userId } = req.params;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
@@ -76,22 +75,15 @@ export const updatedUserByAdmin = async (
 				message: `This user ${user.name} is also an admin, so you can't make changes to this user 🚫`,
 			});
 		}
-		await User.updateOne(
-			{ _id: userId },
-			{
-				$set: {
-					name,
-					email,
-					phone,
-					profilePicture,
-					bio,
-					isAdmin,
-				},
-			}
+		const updatedUser = await User.findByIdAndUpdate(
+			userId,
+			{ $set: req.body },
+			{ new: true, runValidators: true }
 		);
+		await updatedUser.save();
 		res.status(200).json({
 			message: `Hola, ${user.name}, you have updated your profile successfully 🤩`,
-			user: user,
+			user: updatedUser,
 		});
 	} catch (err: any) {
 		next(err);
