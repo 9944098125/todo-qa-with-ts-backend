@@ -24,7 +24,7 @@ export const verifyAdmin = async (
 			return res.status(403).json({ message: "Invalid Token" });
 		}
 		req.user = decoded;
-		if ((req as any).user.isAdmin) {
+		if ((req as any).user?.isAdmin) {
 			next();
 		} else {
 			return res.status(400).json({

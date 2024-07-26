@@ -129,7 +129,7 @@ export const createQaForAUser = async (
 		const { userId, adminId } = req.params;
 		const admin = await User.findOne({ _id: adminId });
 		const user = await User.findOne({ _id: userId });
-		const newQa = new User({
+		const newQa = new Qa({
 			question,
 			answer,
 			importance,
@@ -137,6 +137,7 @@ export const createQaForAUser = async (
 			userId,
 		});
 		await newQa.save();
+		// console.log(newQa);
 		res.status(201).json({
 			message: `Hola, ${admin.name}, you have created a new QA for ${user.name} successfully 🤩`,
 			qa: newQa,
@@ -201,6 +202,12 @@ export const deleteQaOfAUser = async (
 		const { userId, qaId, adminId } = req.params;
 		const user = await User.findOne({ _id: userId });
 		const admin = await User.findOne({ _id: adminId });
+		const qa = await Qa.findOne({ _id: qaId });
+		if (!qa) {
+			return res.status(403).json({
+				message: `This QA does not exist🚫`,
+			});
+		}
 		await Qa.findByIdAndDelete({ _id: qaId });
 		res.status(200).json({
 			message: `Hola, ${admin.name}, you have deleted the QA of ${user.name} successfully 🤩`,

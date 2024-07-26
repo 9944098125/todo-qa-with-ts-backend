@@ -24,11 +24,12 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             .json({ message: "Unauthorized ! No Token Provided" });
     }
     jsonwebtoken_1.default.verify(token, process.env.SECRET_TOKEN, (err, decoded) => {
+        var _a;
         if (err) {
             return res.status(403).json({ message: "Invalid Token" });
         }
         req.user = decoded;
-        if (req.user.isAdmin) {
+        if ((_a = req.user) === null || _a === void 0 ? void 0 : _a.isAdmin) {
             next();
         }
         else {

@@ -121,7 +121,7 @@ const createQaForAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, f
         const { userId, adminId } = req.params;
         const admin = yield User_1.default.findOne({ _id: adminId });
         const user = yield User_1.default.findOne({ _id: userId });
-        const newQa = new User_1.default({
+        const newQa = new Qa_1.default({
             question,
             answer,
             importance,
@@ -129,6 +129,7 @@ const createQaForAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, f
             userId,
         });
         yield newQa.save();
+        // console.log(newQa);
         res.status(201).json({
             message: `Hola, ${admin.name}, you have created a new QA for ${user.name} successfully 🤩`,
             qa: newQa,
@@ -180,6 +181,12 @@ const deleteQaOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const { userId, qaId, adminId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         const admin = yield User_1.default.findOne({ _id: adminId });
+        const qa = yield Qa_1.default.findOne({ _id: qaId });
+        if (!qa) {
+            return res.status(403).json({
+                message: `This QA does not exist🚫`,
+            });
+        }
         yield Qa_1.default.findByIdAndDelete({ _id: qaId });
         res.status(200).json({
             message: `Hola, ${admin.name}, you have deleted the QA of ${user.name} successfully 🤩`,

@@ -176,5 +176,29 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 {
   "question":"What is NodeJs ?",
   "answer":"NodeJs is a javascript library that is used to build user interfaces with advanced logics and animations with management of state, props and api integration.",
-  "toolId":"3"
+  "toolId":"3",
+  "importance":"Important"
 }
+
+############# GET A USER'S QA
+GET https://todo-qa-with-ts-backend.onrender.com/api/admin/qa/66a3d2d6063086539ee99def
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+########### UPDATE QA OF A USER BY ADMIN
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/admin/updateQa/66a3d2d6063086539ee99def/66a3ddbbb4bcf37ad42f6c1b/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+{
+  "question":"What is NodeJs ?",
+  "answer":"NodeJs is a JS Framework that is used to build server side apps accepting concurrent requests with async functions and promises",
+  "toolId":"2",
+  "importance":"Important"
+}
+
+
+############ DELETE A QA OF A USER BY ADMIN
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteQA/66a3d2d6063086539ee99def/66a3ddbbb4bcf37ad42f6c1b/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
