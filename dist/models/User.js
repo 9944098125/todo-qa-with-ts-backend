@@ -32,6 +32,9 @@ const userSchema = new mongoose_1.default.Schema({
     googleId: {
         type: String,
     },
+    githubId: {
+        type: String,
+    },
 }, { timestamps: true });
 const User = mongoose_1.default.models.User || mongoose_1.default.model("User", userSchema);
 exports.default = User;

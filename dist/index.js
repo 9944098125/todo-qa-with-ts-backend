@@ -110,7 +110,6 @@ app.get("/auth/google/callback", passport_1.default.authenticate("google", {
 }));
 app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["user:email"] }));
 app.get("/auth/github/callback", passport_1.default.authenticate("github", { failureRedirect: "/login" }), function (req, res) {
-    // Successful authentication, redirect home.
     res.redirect("/");
 });
 app.get("/auth/login-success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
