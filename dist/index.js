@@ -104,12 +104,18 @@ passport_1.default.serializeUser((user, done) => {
 passport_1.default.deserializeUser((user, done) => {
     done(null, user);
 });
-app.get("/auth/google", passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
+app.get("/auth/google", passport_1.default.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+}));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", {
     successRedirect: "http://localhost:3000",
     failureRedirect: "http://localhost:3000/login",
 }));
-app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["profile", "email"] }));
+app.get("/auth/github", passport_1.default.authenticate("github", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+}));
 app.get("/auth/github/callback", passport_1.default.authenticate("google", {
     successRedirect: "http://localhost:3000",
     failureRedirect: "http://localhost:3000/login",

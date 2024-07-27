@@ -122,7 +122,10 @@ passport.deserializeUser((user: any, done: any) => {
 
 app.get(
 	"/auth/google",
-	passport.authenticate("google", { scope: ["profile", "email"] })
+	passport.authenticate("google", {
+		scope: ["profile", "email"],
+		prompt: "select_account",
+	})
 );
 
 app.get(
@@ -135,7 +138,10 @@ app.get(
 
 app.get(
 	"/auth/github",
-	passport.authenticate("github", { scope: ["profile", "email"] })
+	passport.authenticate("github", {
+		scope: ["profile", "email"],
+		prompt: "select_account",
+	})
 );
 
 app.get(
