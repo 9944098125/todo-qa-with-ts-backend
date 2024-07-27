@@ -174,8 +174,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 
 
 {
-  "question":"What is NodeJs ?",
-  "answer":"NodeJs is a javascript library that is used to build user interfaces with advanced logics and animations with management of state, props and api integration.",
+  "question":"What is JavaScript ?",
+  "answer":"JavaScript is a web technology that can be used to build interactive web pages and web applications. It is an interpreted programming language that conforms to the ECMAScript specification.",
   "toolId":"3",
   "importance":"Important"
 }
@@ -200,5 +200,39 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 
 ############ DELETE A QA OF A USER BY ADMIN
 DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteQA/66a3d2d6063086539ee99def/66a3ddbbb4bcf37ad42f6c1b/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+########### CREATE A TODO FOR A USER BY ADMIN
+POST https://todo-qa-with-ts-backend.onrender.com/api/admin/createTodo/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+{
+  "title":"Todo Title",
+  "description":"Todo Description",
+  "urgency":true,
+  "deadline":"2021-06-01"
+}
+
+################# GET ALL TODO OF A USER BY ADMIN
+GET https://todo-qa-with-ts-backend.onrender.com/api/admin/todo/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+################ UPDATE A QA OF A USER BY ADMIN
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/admin/updateTodo/66a3d2d6063086539ee99def/66a4a066f3e02677ec471820/669250d6c617e4760f3d31f1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+{
+  "title":"Updated Todo Title",
+  "description":"Updated Todo Description",
+  "urgency":true,
+  "deadline":"2021-06-01"
+}
+
+############### DELETE A TODO OF A USER BY ADMIN
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteTodo/66a3d2d6063086539ee99def/66a4a066f3e02677ec471820/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
