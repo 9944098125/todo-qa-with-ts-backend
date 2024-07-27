@@ -77,7 +77,7 @@ passport_1.default.use(new passport_github2_1.Strategy({
     callbackURL: "/auth/github/callback",
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a;
     //verify the user
     // console.log(profile);
     try {
@@ -85,9 +85,7 @@ passport_1.default.use(new passport_github2_1.Strategy({
         if (!user) {
             const newUser = new User_1.default({
                 name: profile === null || profile === void 0 ? void 0 : profile.displayName,
-                email: profile === null || profile === void 0 ? void 0 : profile.emails[0].value,
                 profilePicture: (_a = profile === null || profile === void 0 ? void 0 : profile.photos) === null || _a === void 0 ? void 0 : _a[0].value,
-                phone: (_b = profile === null || profile === void 0 ? void 0 : profile.phoneNumbers) === null || _b === void 0 ? void 0 : _b[0].value,
                 githubId: profile === null || profile === void 0 ? void 0 : profile.id,
             });
             yield newUser.save();
@@ -106,21 +104,17 @@ passport_1.default.deserializeUser((user, done) => {
 });
 app.get("/auth/google", passport_1.default.authenticate("google", {
     scope: ["profile", "email"],
-    prompt: "select_account",
 }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", {
     successRedirect: "http://localhost:3000",
     failureRedirect: "http://localhost:3000/login",
 }));
-app.get("/auth/github", passport_1.default.authenticate("github", {
-    scope: ["profile", "email"],
-    prompt: "select_account",
-}));
-app.get("/auth/github/callback", passport_1.default.authenticate("google", {
+app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["user:email"] }));
+app.get("/auth/github/callback", passport_1.default.authenticate("github", {
     successRedirect: "http://localhost:3000",
     failureRedirect: "http://localhost:3000/login",
 }));
-app.get("/auth/login-success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req === null || req === void 0 ? void 0 : req.user) {
         res.status(200).json({ message: "user Login", user: req.user });
     }

@@ -97,9 +97,7 @@ passport.use(
 				if (!user) {
 					const newUser = new User({
 						name: profile?.displayName,
-						email: profile?.emails[0].value,
 						profilePicture: profile?.photos?.[0].value,
-						phone: profile?.phoneNumbers?.[0].value,
 						githubId: profile?.id,
 					});
 					await newUser.save();
@@ -124,7 +122,6 @@ app.get(
 	"/auth/google",
 	passport.authenticate("google", {
 		scope: ["profile", "email"],
-		prompt: "select_account",
 	})
 );
 
@@ -138,21 +135,18 @@ app.get(
 
 app.get(
 	"/auth/github",
-	passport.authenticate("github", {
-		scope: ["profile", "email"],
-		prompt: "select_account",
-	})
+	passport.authenticate("github", { scope: ["user:email"] })
 );
 
 app.get(
 	"/auth/github/callback",
-	passport.authenticate("google", {
+	passport.authenticate("github", {
 		successRedirect: "http://localhost:3000",
 		failureRedirect: "http://localhost:3000/login",
 	})
 );
 
-app.get("/auth/login-success", async (req, res) => {
+app.get("/login/success", async (req: Request, res: Response) => {
 	if (req?.user) {
 		res.status(200).json({ message: "user Login", user: req.user });
 	} else {
