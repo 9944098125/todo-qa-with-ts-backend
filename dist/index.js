@@ -75,6 +75,7 @@ passport_1.default.use(new passport_github2_1.Strategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: "/auth/github/callback",
+    scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     //verify the user
@@ -108,10 +109,11 @@ app.get("/auth/google/callback", passport_1.default.authenticate("google", {
     successRedirect: "http://localhost:3000",
     failureRedirect: "http://localhost:3000/login",
 }));
-app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["user:email"] }));
-app.get("/auth/github/callback", passport_1.default.authenticate("github", { failureRedirect: "/login" }), function (req, res) {
-    res.redirect("/");
-});
+app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["profile", "email"] }));
+app.get("/auth/github/callback", passport_1.default.authenticate("google", {
+    successRedirect: "http://localhost:3000",
+    failureRedirect: "http://localhost:3000/login",
+}));
 app.get("/auth/login-success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req === null || req === void 0 ? void 0 : req.user) {
         res.status(200).json({ message: "user Login", user: req.user });

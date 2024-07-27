@@ -82,6 +82,7 @@ passport.use(
 			clientID: process.env.GITHUB_CLIENT_ID!,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
 			callbackURL: "/auth/github/callback",
+			scope: ["profile", "email"],
 		},
 		async (
 			accessToken: string,
@@ -134,15 +135,15 @@ app.get(
 
 app.get(
 	"/auth/github",
-	passport.authenticate("github", { scope: ["user:email"] })
+	passport.authenticate("github", { scope: ["profile", "email"] })
 );
 
 app.get(
 	"/auth/github/callback",
-	passport.authenticate("github", { failureRedirect: "/login" }),
-	function (req, res) {
-		res.redirect("/");
-	}
+	passport.authenticate("google", {
+		successRedirect: "http://localhost:3000",
+		failureRedirect: "http://localhost:3000/login",
+	})
 );
 
 app.get("/auth/login-success", async (req, res) => {
