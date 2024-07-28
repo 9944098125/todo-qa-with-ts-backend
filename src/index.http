@@ -3,10 +3,10 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-  "name":"A V V Satyanarayana",
-  "email":"satya@yopmail.com",
+  "name":"A S R Bala",
+  "email":"bala@yopmail.com",
   "password":"Srinivas@8",
-  "phone":"919177629841",
+  "phone":"7842171729",
   "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/v1720865877/gkfphz7dd4kru4eiwmbx.jpg",
   "bio":"Bank Employee",
   "isAdmin":false
@@ -54,7 +54,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 }
 
 ########### DELETE USER
-DELETE http://localhost:5000/api/auth/6692549ff78a68885d33ef03/delete
+DELETE http://localhost:5000/api/auth/66a5eeba543b344e5e9ab99e/delete
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3ODA4ODN9.zGMNWU1QJGC9xfJf4oYpSp60bZBSqvPiZ8WqkTPI4Ro
 
