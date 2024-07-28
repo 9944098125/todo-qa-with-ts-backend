@@ -14,7 +14,7 @@ export async function sendRegistrationEmail(
 			service: "Gmail", // service provider
 			auth: {
 				user: "srinivas72075@gmail.com",
-				pass: "rvtn mpnt moyb ofjr",
+				pass: "ifhp vypf rhqb ubpw",
 			},
 		});
 
