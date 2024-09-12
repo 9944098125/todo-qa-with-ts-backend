@@ -1,6 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import Qa from "../models/Qa";
 import User from "../models/User";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+dotenv.config();
+// Create a configuration with your OpenAI API key
+const openAI = new OpenAI({
+	apiKey: process.env.OPEN_AI_API_KEY,
+});
 
 export const createQa = async (
 	req: Request,
@@ -88,5 +95,40 @@ export const deleteQa = async (
 		});
 	} catch (err: any) {
 		next(err);
+	}
+};
+
+export const generateAnswerWithAI = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { question } = req.body;
+
+		if (!question) {
+			return res.status(400).json({ error: "Question is required" });
+		}
+		const completion = await openAI.chat.completions.create({
+			model: "gpt-4",
+			messages: [
+				{
+					role: "system",
+					content:
+						"You are an expert in answering web development questions regarding all the web technologies.",
+				},
+				{
+					role: "user",
+					content: question,
+				},
+			],
+			max_tokens: 300,
+		});
+
+		const generatedAnswer = completion.choices[0].message.content;
+
+		return res.status(200).json({ generatedAnswer });
+	} catch (error) {
+		next(error);
 	}
 };

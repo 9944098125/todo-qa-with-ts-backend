@@ -1,6 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import Todo from "../models/Todo";
 import User from "../models/User";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+
+dotenv.config();
+// Create a configuration with your OpenAI API key
+const openAI = new OpenAI({
+	apiKey: process.env.OPEN_AI_API_KEY,
+});
 
 export const createTodo = async (
 	req: Request,
@@ -88,5 +96,40 @@ export const deleteTodo = async (
 		});
 	} catch (err: any) {
 		next(err);
+	}
+};
+
+export const generateTodoDescription = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	try {
+		const { todoTitle } = req.body;
+
+		if (!todoTitle) {
+			return res.status(400).json({ error: "Todo Title is required" });
+		}
+		const completion = await openAI.chat.completions.create({
+			model: "gpt-4",
+			messages: [
+				{
+					role: "system",
+					content:
+						"You are an expert in allocating work for the given task names.",
+				},
+				{
+					role: "user",
+					content: todoTitle,
+				},
+			],
+			max_tokens: 50,
+		});
+
+		const generatedTodoDescription = completion.choices[0].message.content;
+
+		return res.status(200).json({ generatedTodoDescription });
+	} catch (error) {
+		next(error);
 	}
 };

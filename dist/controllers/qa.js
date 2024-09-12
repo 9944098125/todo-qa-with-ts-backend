@@ -12,9 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteQa = exports.updateQa = exports.getQa = exports.createQa = void 0;
+exports.generateAnswerWithAI = exports.deleteQa = exports.updateQa = exports.getQa = exports.createQa = void 0;
 const Qa_1 = __importDefault(require("../models/Qa"));
 const User_1 = __importDefault(require("../models/User"));
+const openai_1 = __importDefault(require("openai"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+// Create a configuration with your OpenAI API key
+const openAI = new openai_1.default({
+    apiKey: process.env.OPEN_AI_API_KEY,
+});
 const createQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { question, answer, userId, toolId, importance } = req.body;
@@ -92,3 +99,31 @@ const deleteQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.deleteQa = deleteQa;
+const generateAnswerWithAI = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { question } = req.body;
+        if (!question) {
+            return res.status(400).json({ error: "Question is required" });
+        }
+        const completion = yield openAI.chat.completions.create({
+            model: "gpt-4",
+            messages: [
+                {
+                    role: "system",
+                    content: "You are an expert in answering web development questions regarding all the web technologies.",
+                },
+                {
+                    role: "user",
+                    content: question,
+                },
+            ],
+            max_tokens: 300,
+        });
+        const generatedAnswer = completion.choices[0].message.content;
+        return res.status(200).json({ generatedAnswer });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.generateAnswerWithAI = generateAnswerWithAI;
