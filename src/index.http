@@ -1,5 +1,5 @@
 ######### REGISTER
-POST http://localhost:5000/api/auth/register
+POST https://todo-qa-with-ts-backend.onrender.com/api/auth/register
 Content-Type: application/json
 
 {
@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ######### LOGIN
-POST http://localhost:5000/api/auth/login
+POST https://todo-qa-with-ts-backend.onrender.com/api/auth/login
 Content-Type: application/json
 
 {
@@ -22,15 +22,15 @@ Content-Type: application/json
 }
 
 ######## GET ALL USERS
-GET http://localhost:5000/api/auth
+GET https://todo-qa-with-ts-backend.onrender.com/api/auth
 Content-Type: application/json
 
 ######### GET USER WITH ID
-GET http://localhost:5000/api/auth/66a3d2d6063086539ee99def
+GET https://todo-qa-with-ts-backend.onrender.com/api/auth/66a3d2d6063086539ee99def
 Content-Type: application/json
 
 ####### UPDATE USER WITH ID
-PATCH http://localhost:5000/api/auth/66a3c72fada193bfc674642b
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/auth/66a3c72fada193bfc674642b
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
@@ -44,7 +44,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 }
 
 ######## UPDATE PASSWORD
-PATCH http://localhost:5000/api/auth/668ea8f5f291ce9483b65f83/updatePassword
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/auth/668ea8f5f291ce9483b65f83/updatePassword
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
@@ -54,12 +54,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 }
 
 ########### DELETE USER
-DELETE http://localhost:5000/api/auth/66a5eeba543b344e5e9ab99e/delete
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/auth/66a5eeba543b344e5e9ab99e/delete
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3ODA4ODN9.zGMNWU1QJGC9xfJf4oYpSp60bZBSqvPiZ8WqkTPI4Ro
 
 ############# CREATE QA
-POST http://localhost:5000/api/qa/create
+POST https://todo-qa-with-ts-backend.onrender.com/api/qa/create
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
@@ -71,12 +71,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 }
 
 ############ GET QA BY TOOL ID
-GET http://localhost:5000/api/qa/668ea8f5f291ce9483b65f83/3
+GET https://todo-qa-with-ts-backend.onrender.com/api/qa/668ea8f5f291ce9483b65f83/3
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
 ############## UPDATE QA 
-PATCH http://localhost:5000/api/qa/66916b8c04b5fc4216f00068/668ea8f5f291ce9483b65f83
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/qa/66916b8c04b5fc4216f00068/668ea8f5f291ce9483b65f83
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
@@ -87,12 +87,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlY
 }
 
 ############# DELETE QA
-DELETE http://localhost:5000/api/qa/668eae7d6d917c9032e4832a/668ea8f5f291ce9483b65f83
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/qa/668eae7d6d917c9032e4832a/668ea8f5f291ce9483b65f83
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjhlYThmNWYyOTFjZTk0ODNiNjVmODMiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA2MjU0ODN9.4-ewiskwhpzKvHBaZprmqMbQti-8t9nTyBKvvnAfzaY
 
 ############# CREATE TODO
-POST http://localhost:5000/api/todo/create
+POST https://todo-qa-with-ts-backend.onrender.com/api/todo/create
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3ODA5ODh9.W0d90MBCpCeGhsx7zbHy6fRC97kfGof8NLSICLzcTRs
 
@@ -105,13 +105,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxM
 }
 
 ############# GET TODO WITH USERID
-GET http://localhost:5000/api/todo/669106bdd60d4cdbe4ca7a42
+GET https://todo-qa-with-ts-backend.onrender.com/api/todo/669106bdd60d4cdbe4ca7a42
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3ODA5ODh9.W0d90MBCpCeGhsx7zbHy6fRC97kfGof8NLSICLzcTRs
 
 
 ############### UPDATE TODO
-PATCH http://localhost:5000/api/todo/66910a4b287a7f85ea4c5fd0
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/todo/66910a4b287a7f85ea4c5fd0
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3OTk3NDR9.-63Qg1mjJOkrqw-RsxyFGDMxjHSjx0b2oQwU55ghyhE
 
@@ -124,12 +124,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxM
 }
 
 ########## DELETE TODO
-DELETE http://localhost:5000/api/todo/66910a4b287a7f85ea4c5fd0/669106bdd60d4cdbe4ca7a42
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/todo/66910a4b287a7f85ea4c5fd0/669106bdd60d4cdbe4ca7a42
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkxMDZiZGQ2MGQ0Y2RiZTRjYTdhNDIiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA3OTk3NDR9.-63Qg1mjJOkrqw-RsxyFGDMxjHSjx0b2oQwU55ghyhE
 
 ############ CREATED USER BY ADMIN
-POST http://localhost:5000/api/admin/createUser/669250d6c617e4760f3d31f1
+POST https://todo-qa-with-ts-backend.onrender.com/api/admin/createUser/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
@@ -143,12 +143,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ############ GET ALL USERS BY ADMIN
-GET http://localhost:5000/api/admin/users
+GET https://todo-qa-with-ts-backend.onrender.com/api/admin/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
 ################# UPDATE USER BY ADMIN
-PATCH http://localhost:5000/api/admin/updateUser/66a3cc0aada193bfc6746445
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/admin/updateUser/66a3cc0aada193bfc6746445
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
@@ -162,13 +162,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ########### DELETE A USER BY ADMIN
-DELETE http://localhost:5000/api/admin/deleteUser/66a3cc0aada193bfc6746445/669250d6c617e4760f3d31f1
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteUser/66a3cc0aada193bfc6746445/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
 
 ########### CREATE QA BY ADMIN
-POST http://localhost:5000/api/admin/createQA/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
+POST https://todo-qa-with-ts-backend.onrender.com/api/admin/createQA/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
@@ -181,12 +181,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ############# GET A USER'S QA
-GET http://localhost:5000/api/admin/qa/66a3d2d6063086539ee99def
+GET https://todo-qa-with-ts-backend.onrender.com/api/admin/qa/66a3d2d6063086539ee99def
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
 ########### UPDATE QA OF A USER BY ADMIN
-PATCH http://localhost:5000/api/admin/updateQa/66a3d2d6063086539ee99def/66a3ddbbb4bcf37ad42f6c1b/669250d6c617e4760f3d31f1
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/admin/updateQa/66a3d2d6063086539ee99def/66a3ddbbb4bcf37ad42f6c1b/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
@@ -199,12 +199,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 
 
 ############ DELETE A QA OF A USER BY ADMIN
-DELETE http://localhost:5000/api/admin/deleteQA/66a3d2d6063086539ee99def/66a3ddbbb4bcf37ad42f6c1b/669250d6c617e4760f3d31f1
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteQA/66a3d2d6063086539ee99def/66a3ddbbb4bcf37ad42f6c1b/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
 ########### CREATE A TODO FOR A USER BY ADMIN
-POST http://localhost:5000/api/admin/createTodo/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
+POST https://todo-qa-with-ts-backend.onrender.com/api/admin/createTodo/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
@@ -216,12 +216,12 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ################# GET ALL TODO OF A USER BY ADMIN
-GET http://localhost:5000/api/admin/todo/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
+GET https://todo-qa-with-ts-backend.onrender.com/api/admin/todo/66a3d2d6063086539ee99def/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
 ################ UPDATE A QA OF A USER BY ADMIN
-PATCH http://localhost:5000/api/admin/updateTodo/66a3d2d6063086539ee99def/66a4a066f3e02677ec471820/669250d6c617e4760f3d31f1
+PATCH https://todo-qa-with-ts-backend.onrender.com/api/admin/updateTodo/66a3d2d6063086539ee99def/66a4a066f3e02677ec471820/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
@@ -233,18 +233,18 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ############### DELETE A TODO OF A USER BY ADMIN
-DELETE http://localhost:5000/api/admin/deleteTodo/66a3d2d6063086539ee99def/66a4a066f3e02677ec471820/669250d6c617e4760f3d31f1
+DELETE https://todo-qa-with-ts-backend.onrender.com/api/admin/deleteTodo/66a3d2d6063086539ee99def/66a4a066f3e02677ec471820/669250d6c617e4760f3d31f1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
 
 ################ GOOGLE AND GITHUB LOGIN
-### FIRSTLY NAVIGATE TO "http://localhost:5000/auth/google/callback" FROM FRONTEND
+### FIRSTLY NAVIGATE TO "https://todo-qa-with-ts-backend.onrender.com/auth/google/callback" FROM FRONTEND
 ### IN THE LOGIN COMPONENT AND THEN IN THE HOME COMPONENT WE NEED TO FETCH 
 ### THE USER DETAILS FROM THE API "http:localhost:5000/login/success"
 
 ########### GENERATE A TODO DESCRIPTION
-POST http://localhost:5000/api/todo/generate-todo-description
+POST https://todo-qa-with-ts-backend.onrender.com/api/todo/generate-todo-description
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
@@ -253,7 +253,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ######### GENERATE ANSWER FOR A QUESTION
-POST http://localhost:5000/api/qa/generate-answer
+POST https://todo-qa-with-ts-backend.onrender.com/api/qa/generate-answer
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
