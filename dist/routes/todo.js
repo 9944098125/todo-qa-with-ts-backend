@@ -12,6 +12,6 @@ router.route("/:userId").get(verify_1.verifyToken, todo_1.getTodoWithUserId);
 router.route("/:todoId").patch(verify_1.verifyTodoOwner, todo_1.updateTodo);
 router.route("/:todoId/:userId").delete(verify_1.verifyTodoOwner, todo_1.deleteTodo);
 router
-    .route("generate-todo-description")
+    .route("/generate-todo-description")
     .post(verify_1.verifyToken, todo_1.generateTodoDescription);
 exports.default = router;

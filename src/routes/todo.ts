@@ -19,7 +19,7 @@ router.route("/:todoId").patch(verifyTodoOwner, updateTodo);
 router.route("/:todoId/:userId").delete(verifyTodoOwner, deleteTodo);
 
 router
-	.route("generate-todo-description")
+	.route("/generate-todo-description")
 	.post(verifyToken, generateTodoDescription);
 
 export default router;

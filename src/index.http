@@ -242,3 +242,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 ### FIRSTLY NAVIGATE TO "http://localhost:5000/auth/google/callback" FROM FRONTEND
 ### IN THE LOGIN COMPONENT AND THEN IN THE HOME COMPONENT WE NEED TO FETCH 
 ### THE USER DETAILS FROM THE API "http:localhost:5000/login/success"
+
+########### GENERATE A TODO DESCRIPTION
+POST http://localhost:5000/api/todo/generate-todo-description
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+{
+  "todoTitle":"buy clothes for diwali"
+}
+
+######### GENERATE ANSWER FOR A QUESTION
+POST http://localhost:5000/api/qa/generate-answer
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
+
+{
+  "question":"what is React ?"
+}
