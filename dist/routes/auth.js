@@ -14,4 +14,5 @@ router.route("/:userId").patch(verify_1.verifyToken, auth_1.updateUser);
 router.route("/:userId/updatePassword").patch(verify_1.verifyToken, auth_1.updatePassword);
 router.route("/").get(auth_1.getAllUsers);
 router.route("/:userId/delete").delete(verify_1.verifyToken, auth_1.deleteUser);
+router.route("/generateImage").post(verify_1.verifyToken, auth_1.generateProfilePicture);
 exports.default = router;

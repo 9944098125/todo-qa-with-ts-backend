@@ -12,12 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.updatePassword = exports.updateUser = exports.getUserWithId = exports.getAllUsers = exports.login = exports.register = void 0;
+exports.generateProfilePicture = exports.deleteUser = exports.updatePassword = exports.updateUser = exports.getUserWithId = exports.getAllUsers = exports.login = exports.register = void 0;
 const User_1 = __importDefault(require("../models/User"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const registerEmail_1 = require("../helpers/registerEmail");
 const sendLoginEmail_1 = require("../helpers/sendLoginEmail");
+const openai_1 = __importDefault(require("openai"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+// Create a configuration with your OpenAI API key
+const openAI = new openai_1.default({
+    apiKey: process.env.OPEN_AI_API_KEY,
+});
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password, phone, profilePicture, bio, isAdmin } = req.body;
@@ -195,3 +202,30 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.deleteUser = deleteUser;
+const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { gender } = req.body;
+    // Validate gender input
+    if (!gender ||
+        (gender !== "male" && gender !== "female" && gender !== "other")) {
+        return res
+            .status(400)
+            .json({ error: "Please provide a valid gender (male, female, other)." });
+    }
+    try {
+        // Prompt OpenAI's DALL·E model to generate an avatar based on gender
+        const prompt = `A professional profile photo of a ${gender} person in a professional setting`;
+        const response = yield openAI.images.generate({
+            prompt: prompt, // Text prompt for image generation
+            n: 1, // Generate 1 image
+            size: "512x512", // Image size (can be customized)
+        });
+        // Get the generated image URL
+        const imageUrl = response.data[0].url;
+        // Send the avatar image URL in response
+        res.json({ imageUrl });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.generateProfilePicture = generateProfilePicture;

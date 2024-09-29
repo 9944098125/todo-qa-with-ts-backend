@@ -5,6 +5,15 @@ import jwt from "jsonwebtoken";
 import { sendRegistrationEmail } from "../helpers/registerEmail";
 import { sendLoginEmail } from "../helpers/sendLoginEmail";
 
+import OpenAI from "openai";
+import dotenv from "dotenv";
+
+dotenv.config();
+// Create a configuration with your OpenAI API key
+const openAI = new OpenAI({
+	apiKey: process.env.OPEN_AI_API_KEY,
+});
+
 export const register = async (
 	req: Request,
 	res: Response,
@@ -213,6 +222,43 @@ export const deleteUser = async (
 		res.status(200).json({
 			message: `Hola, ${user?.name}'s account is deleted successfully 🤩`,
 		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const generateProfilePicture = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const { gender } = req.body;
+
+	// Validate gender input
+	if (
+		!gender ||
+		(gender !== "male" && gender !== "female" && gender !== "other")
+	) {
+		return res
+			.status(400)
+			.json({ error: "Please provide a valid gender (male, female, other)." });
+	}
+
+	try {
+		// Prompt OpenAI's DALL·E model to generate an avatar based on gender
+		const prompt = `A professional profile photo of a ${gender} person in a professional setting`;
+
+		const response = await openAI.images.generate({
+			prompt: prompt, // Text prompt for image generation
+			n: 1, // Generate 1 image
+			size: "512x512", // Image size (can be customized)
+		});
+
+		// Get the generated image URL
+		const imageUrl = response.data[0].url;
+
+		// Send the avatar image URL in response
+		res.json({ imageUrl });
 	} catch (error) {
 		next(error);
 	}

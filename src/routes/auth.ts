@@ -2,6 +2,7 @@ import { verifyToken } from "./../middleware/verify";
 import express from "express";
 import {
 	deleteUser,
+	generateProfilePicture,
 	getAllUsers,
 	getUserWithId,
 	login,
@@ -25,5 +26,7 @@ router.route("/:userId/updatePassword").patch(verifyToken, updatePassword);
 router.route("/").get(getAllUsers);
 
 router.route("/:userId/delete").delete(verifyToken, deleteUser);
+
+router.route("/generateImage").post(verifyToken, generateProfilePicture);
 
 export default router;
