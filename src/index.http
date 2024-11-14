@@ -261,7 +261,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
   "question":"what is React ?"
 }
 
-######### GENERATE ANSWER FOR A QUESTION
+######### GENERATE PROFILE IMAGE
 POST http://localhost:5000/api/auth/generateImage
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE

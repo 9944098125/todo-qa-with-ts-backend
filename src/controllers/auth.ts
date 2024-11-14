@@ -234,14 +234,10 @@ export const generateProfilePicture = async (
 ) => {
 	const { gender } = req.body;
 
-	// Validate gender input
-	if (
-		!gender ||
-		(gender !== "male" && gender !== "female" && gender !== "other")
-	) {
+	if (!gender || (gender !== "male" && gender !== "female")) {
 		return res
 			.status(400)
-			.json({ error: "Please provide a valid gender (male, female, other)." });
+			.json({ error: "Please provide a valid gender (male, female)." });
 	}
 
 	try {
