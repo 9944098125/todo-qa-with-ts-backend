@@ -45,7 +45,10 @@ passport.use(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			callbackURL: "/auth/google/callback",
+			callbackURL:
+				process.env.NODE_ENV === "production"
+					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback"
+					: "http://localhost:5000/auth/google/callback",
 			scope: ["profile", "email"],
 		},
 		async (
@@ -81,7 +84,11 @@ passport.use(
 		{
 			clientID: process.env.GITHUB_CLIENT_ID!,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-			callbackURL: "/auth/github/callback",
+			callbackURL:
+				process.env.NODE_ENV === "production"
+					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback"
+					: "http://localhost:5000/auth/github/callback",
+
 			scope: ["profile", "email"],
 		},
 		async (
