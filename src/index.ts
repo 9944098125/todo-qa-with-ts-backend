@@ -135,8 +135,8 @@ app.get(
 app.get(
 	"/auth/google/callback",
 	passport.authenticate("google", {
-		successRedirect: "/",
-		failureRedirect: "/",
+		successRedirect: "http://localhost:3000",
+		failureRedirect: "http://localhost:3000",
 	})
 );
 
@@ -148,8 +148,8 @@ app.get(
 app.get(
 	"/auth/github/callback",
 	passport.authenticate("github", {
-		successRedirect: "/",
-		failureRedirect: "/",
+		successRedirect: "http://localhost:3000",
+		failureRedirect: "http://localhost:3000",
 	})
 );
 
