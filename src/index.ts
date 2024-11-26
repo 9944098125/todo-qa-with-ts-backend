@@ -97,8 +97,6 @@ passport.use(
 			profile: any,
 			done: (error: any, user?: any) => void
 		) => {
-			//verify the user
-			// console.log(profile);
 			try {
 				const user = await User.findOne({ githubId: profile.id });
 				if (!user) {
@@ -118,16 +116,11 @@ passport.use(
 );
 
 passport.serializeUser((user: any, done: any) => {
-	done(null, user.id); // Save only the user ID in the session
+	done(null, user);
 });
 
-passport.deserializeUser(async (id: string, done: any) => {
-	try {
-		const user = await User.findById(id); // Fetch the full user record by ID
-		done(null, user);
-	} catch (err) {
-		done(err, null);
-	}
+passport.deserializeUser(async (user: any, done: any) => {
+	done(null, user);
 });
 
 app.get(
