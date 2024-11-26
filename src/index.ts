@@ -18,14 +18,9 @@ dotenv.config();
 
 const app: Application = express();
 
-const allowedOrigins = [
-	"http://localhost:3000",
-	"https://todo-qa-with-ts-backend-production.up.railway.app",
-];
-
 app.use(
 	cors({
-		origin: "http://localhost:3001",
+		origin: "http://localhost:3000",
 		methods: "GET,POST,PUT,DELETE",
 		credentials: true,
 	})
@@ -157,7 +152,7 @@ app.get(
 	})
 );
 
-app.get("/login/success", (req, res) => {
+app.get("/login/success", async (req, res) => {
 	if (req.user) {
 		res.status(200).json({ message: "user Login", user: req.user });
 	} else {
