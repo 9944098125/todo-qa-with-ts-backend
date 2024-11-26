@@ -118,11 +118,16 @@ passport.use(
 );
 
 passport.serializeUser((user: any, done: any) => {
-	done(null, user);
+	done(null, user.id); // Save only the user ID in the session
 });
 
-passport.deserializeUser((user: any, done: any) => {
-	done(null, user);
+passport.deserializeUser(async (id: string, done: any) => {
+	try {
+		const user = await User.findById(id); // Fetch the full user record by ID
+		done(null, user);
+	} catch (err) {
+		done(err, null);
+	}
 });
 
 app.get(
