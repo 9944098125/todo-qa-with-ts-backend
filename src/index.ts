@@ -17,11 +17,24 @@ import User from "./models/User";
 dotenv.config();
 
 const app: Application = express();
+
+const allowedOrigins = [
+	"http://localhost:3000",
+	"https://todo-qa-with-ts-backend-production.up.railway.app",
+];
+
 app.use(
 	cors({
-		origin: "http://localhost:3000",
-		methods: "GET,POST,PUT,DELETE",
-		credentials: true,
+		origin: (origin, callback) => {
+			if (!origin || allowedOrigins.includes(origin)) {
+				// Allow requests with null origins (e.g., file:// or sandboxed requests)
+				callback(null, true);
+			} else {
+				callback(new Error("Not allowed by CORS"));
+			}
+		},
+		methods: "GET,POST,PATCH,PUT,DELETE",
+		credentials: true, // Allow credentials (cookies)
 	})
 );
 app.use(express.json());
@@ -29,11 +42,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // to create a session for google login
+// app.use(
+// 	session({
+// 		secret: process.env.SECRET_TOKEN!,
+// 		resave: false,
+// 		saveUninitialized: true,
+// 	})
+// );
+
 app.use(
 	session({
 		secret: process.env.SECRET_TOKEN!,
 		resave: false,
 		saveUninitialized: true,
+		cookie: {
+			secure: process.env.NODE_ENV === "production", // Secure cookies in production
+			httpOnly: true, // Prevent client-side access
+			sameSite: "none", // Required for cross-origin cookies
+			maxAge: 24 * 60 * 60 * 1000, // 1 day
+		},
 	})
 );
 
