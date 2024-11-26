@@ -78,7 +78,7 @@ passport.use(
 		}
 	)
 );
-
+// reverting the changes
 passport.use(
 	new GithubStrategy(
 		{
