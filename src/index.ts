@@ -47,7 +47,7 @@ passport.use(
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 			callbackURL:
 				process.env.NODE_ENV === "production"
-					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback"
+					? "http://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback"
 					: "http://localhost:5000/auth/google/callback",
 			scope: ["profile", "email"],
 		},
@@ -86,7 +86,7 @@ passport.use(
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
 			callbackURL:
 				process.env.NODE_ENV === "production"
-					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback"
+					? "http://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback"
 					: "http://localhost:5000/auth/github/callback",
 
 			scope: ["profile", "email"],
@@ -158,11 +158,21 @@ app.get(
 	})
 );
 
-app.get("/login/success", async (req: Request, res: Response) => {
-	if (req?.user) {
-		res.status(200).json({ message: "user Login", user: req.user });
+// app.get("/login/success", async (req: Request, res: Response) => {
+// 	if (req?.user) {
+// 		res.status(200).json({ message: "user Login", user: req.user });
+// 	} else {
+// 		res.status(400).json({ message: "Not Authorized" });
+// 	}
+// });
+app.get("/login/success", (req: Request, res: Response) => {
+	if (req.isAuthenticated()) {
+		res.status(200).json({
+			message: "User Login Successful",
+			user: req.user, // Send user details from session
+		});
 	} else {
-		res.status(400).json({ message: "Not Authorized" });
+		res.status(401).json({ message: "Not Authorized" });
 	}
 });
 
