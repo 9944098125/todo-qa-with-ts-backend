@@ -25,16 +25,9 @@ const allowedOrigins = [
 
 app.use(
 	cors({
-		origin: (origin, callback) => {
-			if (!origin || allowedOrigins.includes(origin)) {
-				// Allow requests with null origins (e.g., file:// or sandboxed requests)
-				callback(null, true);
-			} else {
-				callback(new Error("Not allowed by CORS"));
-			}
-		},
-		methods: "GET,POST,PATCH,PUT,DELETE",
-		credentials: true, // Allow credentials (cookies)
+		origin: "http://localhost:3001",
+		methods: "GET,POST,PUT,DELETE",
+		credentials: true,
 	})
 );
 app.use(express.json());
@@ -42,25 +35,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // to create a session for google login
-// app.use(
-// 	session({
-// 		secret: process.env.SECRET_TOKEN!,
-// 		resave: false,
-// 		saveUninitialized: true,
-// 	})
-// );
-
 app.use(
 	session({
 		secret: process.env.SECRET_TOKEN!,
 		resave: false,
 		saveUninitialized: true,
-		cookie: {
-			secure: process.env.NODE_ENV === "production", // Secure cookies in production
-			httpOnly: true, // Prevent client-side access
-			sameSite: "none", // Required for cross-origin cookies
-			maxAge: 24 * 60 * 60 * 1000, // 1 day
-		},
 	})
 );
 
@@ -178,8 +157,8 @@ app.get(
 	})
 );
 
-app.get("/login/success", async (req: Request, res: Response) => {
-	if (req?.user) {
+app.get("/login/success", (req, res) => {
+	if (req.user) {
 		res.status(200).json({ message: "user Login", user: req.user });
 	} else {
 		res.status(400).json({ message: "Not Authorized" });
