@@ -243,6 +243,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 ### IN THE LOGIN COMPONENT AND THEN IN THE HOME COMPONENT WE NEED TO FETCH 
 ### THE USER DETAILS FROM THE API "http:localhost:5000/login/success"
 
+GET https://todo-qa-with-ts-backend-production.up.railway.app/login/success
+Cookie: s%3A7xTpHs3Tw17GCAxo9zDPO5uRkrzA5OOS.0B3%2Fzt2ofJbceb9h2DKermanvj4ZsAd4OfNQzq8CZkU
+
 ########### GENERATE A TODO DESCRIPTION
 POST https://todo-qa-with-ts-backend.onrender.com/api/todo/generate-todo-description
 Content-Type: application/json

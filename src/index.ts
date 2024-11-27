@@ -34,7 +34,7 @@ app.use(
 		secret: process.env.SECRET_TOKEN || "your-session-secret", // Add a session secret
 		resave: false,
 		saveUninitialized: true,
-		cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
+		cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true }, // Use secure cookies in production
 	})
 );
 
@@ -55,27 +55,26 @@ passport.use(
 			profile: any,
 			done: (error: any, user?: any) => void
 		) => {
-			//verify the user
-			// console.log(profile);
 			try {
-				const user = await User.findOne({ googleId: profile.id });
+				let user = await User.findOne({ googleId: profile.id });
 				if (!user) {
-					const newUser = new User({
+					user = new User({
 						name: profile?.displayName,
 						email: profile?.emails[0].value,
 						profilePicture: profile?.photos?.[0].value,
 						phone: profile?.phoneNumbers?.[0].value,
 						googleId: profile?.id,
 					});
-					await newUser.save();
+					await user.save();
 				}
-				return done(null, user);
-			} catch (err: any) {
+				return done(null, user); // Ensure this is the correct user
+			} catch (err) {
 				return done(err, null);
 			}
 		}
 	)
 );
+
 // reverting the changes
 passport.use(
 	new GithubStrategy(

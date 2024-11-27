@@ -37,10 +37,10 @@ app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, express_session_1.default)({
-    secret: process.env.SESSION_SECRET || "your-session-secret", // Add a session secret
+    secret: process.env.SECRET_TOKEN || "your-session-secret", // Add a session secret
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
+    cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true }, // Use secure cookies in production
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
@@ -51,21 +51,19 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    //verify the user
-    // console.log(profile);
     try {
-        const user = yield User_1.default.findOne({ googleId: profile.id });
+        let user = yield User_1.default.findOne({ googleId: profile.id });
         if (!user) {
-            const newUser = new User_1.default({
+            user = new User_1.default({
                 name: profile === null || profile === void 0 ? void 0 : profile.displayName,
                 email: profile === null || profile === void 0 ? void 0 : profile.emails[0].value,
                 profilePicture: (_a = profile === null || profile === void 0 ? void 0 : profile.photos) === null || _a === void 0 ? void 0 : _a[0].value,
                 phone: (_b = profile === null || profile === void 0 ? void 0 : profile.phoneNumbers) === null || _b === void 0 ? void 0 : _b[0].value,
                 googleId: profile === null || profile === void 0 ? void 0 : profile.id,
             });
-            yield newUser.save();
+            yield user.save();
         }
-        return done(null, user);
+        return done(null, user); // Ensure this is the correct user
     }
     catch (err) {
         return done(err, null);
