@@ -116,6 +116,7 @@ app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(200).json({ message: "user Login", user: req.user });
     }
     else {
+        console.log("error login/success", req);
         res.status(400).json({ message: "Not Authorized" });
     }
 }));
