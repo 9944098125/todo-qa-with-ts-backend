@@ -34,7 +34,11 @@ app.use(
 		secret: process.env.SECRET_TOKEN!, // Add a session secret
 		resave: false,
 		saveUninitialized: true,
-		// cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true }, // Use secure cookies in production
+		cookie: {
+			secure: process.env.NODE_ENV === "production",
+			httpOnly: true,
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+		},
 	})
 );
 

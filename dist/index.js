@@ -40,7 +40,11 @@ app.use((0, express_session_1.default)({
     secret: process.env.SECRET_TOKEN, // Add a session secret
     resave: false,
     saveUninitialized: true,
-    // cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true }, // Use secure cookies in production
+    cookie: {
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
