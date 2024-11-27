@@ -21,7 +21,7 @@ const app: Application = express();
 app.use(
 	cors({
 		origin: "http://localhost:3000",
-		methods: "GET,POST,PUT,DELETE",
+		methods: "GET,POST,PATCH,PUT,DELETE",
 		credentials: true,
 	})
 );
@@ -34,7 +34,7 @@ app.use(
 		secret: process.env.SECRET_TOKEN || "your-session-secret", // Add a session secret
 		resave: false,
 		saveUninitialized: true,
-		cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true }, // Use secure cookies in production
+		cookie: { secure: true, httpOnly: true, sameSite: "strict" }, // Use secure cookies in production
 	})
 );
 
