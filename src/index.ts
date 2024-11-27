@@ -17,6 +17,7 @@ import User from "./models/User";
 dotenv.config();
 
 const app: Application = express();
+
 app.use(
 	cors({
 		origin: "http://localhost:3000",
@@ -82,7 +83,7 @@ passport.use(
 		}
 	)
 );
-
+// reverting the changes
 passport.use(
 	new GithubStrategy(
 		{
@@ -101,8 +102,6 @@ passport.use(
 			profile: any,
 			done: (error: any, user?: any) => void
 		) => {
-			//verify the user
-			// console.log(profile);
 			try {
 				const user = await User.findOne({ githubId: profile.id });
 				if (!user) {
@@ -125,7 +124,7 @@ passport.serializeUser((user: any, done: any) => {
 	done(null, user);
 });
 
-passport.deserializeUser((user: any, done: any) => {
+passport.deserializeUser(async (user: any, done: any) => {
 	done(null, user);
 });
 
@@ -157,8 +156,8 @@ app.get(
 	})
 );
 
-app.get("/login/success", async (req: Request, res: Response) => {
-	if (req?.user) {
+app.get("/login/success", async (req, res) => {
+	if (req.user) {
 		res.status(200).json({ message: "user Login", user: req.user });
 	} else {
 		res.status(400).json({ message: "Not Authorized" });
