@@ -204,12 +204,10 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 exports.deleteUser = deleteUser;
 const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { gender } = req.body;
-    // Validate gender input
-    if (!gender ||
-        (gender !== "male" && gender !== "female" && gender !== "other")) {
+    if (!gender || (gender !== "male" && gender !== "female")) {
         return res
             .status(400)
-            .json({ error: "Please provide a valid gender (male, female, other)." });
+            .json({ error: "Please provide a valid gender (male, female)." });
     }
     try {
         // Prompt OpenAI's DALL·E model to generate an avatar based on gender

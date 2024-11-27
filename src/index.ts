@@ -28,12 +28,16 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// to create a session for google login
 app.use(
 	session({
 		secret: process.env.SECRET_TOKEN!,
 		resave: false,
 		saveUninitialized: true,
+		cookie: {
+			secure: process.env.NODE_ENV === "production",
+			httpOnly: true,
+			maxAge: 24 * 60 * 60 * 1000, // 1 day
+		},
 	})
 );
 
@@ -47,7 +51,7 @@ passport.use(
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
 			callbackURL:
 				process.env.NODE_ENV === "production"
-					? "http://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback"
+					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback"
 					: "http://localhost:5000/auth/google/callback",
 			scope: ["profile", "email"],
 		},
@@ -86,7 +90,7 @@ passport.use(
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
 			callbackURL:
 				process.env.NODE_ENV === "production"
-					? "http://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback"
+					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback"
 					: "http://localhost:5000/auth/github/callback",
 
 			scope: ["profile", "email"],
@@ -118,16 +122,11 @@ passport.use(
 );
 
 passport.serializeUser((user: any, done: any) => {
-	done(null, user.id); // Save only the user ID in the session
+	done(null, user);
 });
 
-passport.deserializeUser(async (id: string, done: any) => {
-	try {
-		const user = await User.findById(id); // Fetch the full user record by ID
-		done(null, user);
-	} catch (err) {
-		done(err, null);
-	}
+passport.deserializeUser((user: any, done: any) => {
+	done(null, user);
 });
 
 app.get(
@@ -158,21 +157,11 @@ app.get(
 	})
 );
 
-// app.get("/login/success", async (req: Request, res: Response) => {
-// 	if (req?.user) {
-// 		res.status(200).json({ message: "user Login", user: req.user });
-// 	} else {
-// 		res.status(400).json({ message: "Not Authorized" });
-// 	}
-// });
-app.get("/login/success", (req: Request, res: Response) => {
-	if (req.isAuthenticated()) {
-		res.status(200).json({
-			message: "User Login Successful",
-			user: req.user, // Send user details from session
-		});
+app.get("/login/success", async (req: Request, res: Response) => {
+	if (req?.user) {
+		res.status(200).json({ message: "user Login", user: req.user });
 	} else {
-		res.status(401).json({ message: "Not Authorized" });
+		res.status(400).json({ message: "Not Authorized" });
 	}
 });
 
