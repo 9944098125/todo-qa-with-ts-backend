@@ -30,17 +30,17 @@ dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: "http://localhost:3000",
-    methods: "GET,POST,PATCH,PUT,DELETE",
+    methods: "GET,POST,PUT,DELETE",
     credentials: true,
 }));
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, express_session_1.default)({
-    secret: process.env.SECRET_TOKEN || "your-session-secret", // Add a session secret
+    secret: process.env.SECRET_TOKEN, // Add a session secret
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true, httpOnly: true, sameSite: "strict" }, // Use secure cookies in production
+    // cookie: { secure: process.env.NODE_ENV === "production", httpOnly: true }, // Use secure cookies in production
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
