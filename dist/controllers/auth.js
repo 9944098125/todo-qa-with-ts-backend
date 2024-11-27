@@ -30,9 +30,10 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         const { name, email, password, phone, profilePicture, bio, isAdmin } = req.body;
         const existingUser = yield User_1.default.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({
+            res.status(400).json({
                 message: `${email} is already used ! Please try some other email... 🚫`,
             });
+            return;
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
         const hashedPassword = bcryptjs_1.default.hashSync(password, saltRounds);
@@ -66,13 +67,15 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         // console.log(OrPhone, password);
         const existingUser = yield User_1.default.findOne(query);
         if (!existingUser) {
-            return res
+            res
                 .status(400)
                 .json({ message: "No User with this email or Phone...❌" });
+            return;
         }
         const passwordMatches = yield bcryptjs_1.default.compare(password, existingUser.password);
         if (!passwordMatches) {
-            return res.status(504).json({ message: "Wrong Password !" });
+            res.status(504).json({ message: "Wrong Password !" });
+            return;
         }
         const userWithoutPassword = yield User_1.default.findOne(query).select("-password");
         const token = jsonwebtoken_1.default.sign({
@@ -109,9 +112,10 @@ const getUserWithId = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
+            res.status(404).json({
                 message: `User with id ${userId} does not exist 🚫`,
             });
+            return;
         }
         res.status(200).json({
             message: `${user === null || user === void 0 ? void 0 : user.name} has been fetched successfully 🤩`,
@@ -129,9 +133,10 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { name, email, phone, profilePicture, bio } = req.body;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
+            res.status(404).json({
                 message: `User with id ${userId} does not exist 🚫`,
             });
+            return;
         }
         const updatedUser = yield User_1.default.findByIdAndUpdate({ _id: userId }, {
             name,
@@ -159,15 +164,17 @@ const updatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const { oldPassword, newPassword } = req.body;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
+            res.status(404).json({
                 message: `User with id ${userId} does not exist 🚫`,
             });
+            return;
         }
         const isPasswordCorrect = bcryptjs_1.default.compareSync(oldPassword, user.password);
         if (!isPasswordCorrect) {
-            return res.status(400).json({
+            res.status(400).json({
                 message: `Incorrect old password! Please try again... 😒`,
             });
+            return;
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
         const hashedPassword = bcryptjs_1.default.hashSync(newPassword, saltRounds);
@@ -188,9 +195,10 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
+            res.status(404).json({
                 message: `User with id ${userId} does not exist 🚫`,
             });
+            return;
         }
         yield User_1.default.findByIdAndDelete({ _id: userId });
         res.status(200).json({
@@ -205,9 +213,10 @@ exports.deleteUser = deleteUser;
 const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { gender } = req.body;
     if (!gender || (gender !== "male" && gender !== "female")) {
-        return res
+        res
             .status(400)
             .json({ error: "Please provide a valid gender (male, female)." });
+        return;
     }
     try {
         // Prompt OpenAI's DALL·E model to generate an avatar based on gender

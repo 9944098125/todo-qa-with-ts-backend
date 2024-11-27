@@ -13,15 +13,16 @@ export const createQa = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { question, answer, userId, toolId, importance } = req.body;
 		const user = await User.findOne({ _id: userId });
 		const existingQa = await Qa.findOne({ question });
 		if (existingQa) {
-			return res.status(400).json({
+			res.status(400).json({
 				message: `Come On ! ${user?.name}, this question already exists in your database 😒`,
 			});
+			return;
 		}
 		const newQa = new Qa({
 			question,
@@ -47,7 +48,7 @@ export const getQa = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId, toolId } = req.params;
 		const user = await User.findOne({ _id: userId });
@@ -65,7 +66,7 @@ export const updateQa = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { qaId, userId } = req.params;
 		const user = await User.findOne({ _id: userId });
@@ -85,7 +86,7 @@ export const deleteQa = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { qaId, userId } = req.params;
 		const user = await User.findOne({ _id: userId });
@@ -102,12 +103,13 @@ export const generateAnswerWithAI = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { question } = req.body;
 
 		if (!question) {
-			return res.status(400).json({ error: "Question is required" });
+			res.status(400).json({ error: "Question is required" });
+			return;
 		}
 		const completion = await openAI.chat.completions.create({
 			model: "gpt-4",
@@ -127,7 +129,8 @@ export const generateAnswerWithAI = async (
 
 		const generatedAnswer = completion.choices[0].message.content;
 
-		return res.status(200).json({ generatedAnswer });
+		res.status(200).json({ generatedAnswer });
+		return;
 	} catch (error) {
 		next(error);
 	}

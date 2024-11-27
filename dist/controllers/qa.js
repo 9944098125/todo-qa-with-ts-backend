@@ -28,9 +28,10 @@ const createQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         const user = yield User_1.default.findOne({ _id: userId });
         const existingQa = yield Qa_1.default.findOne({ question });
         if (existingQa) {
-            return res.status(400).json({
+            res.status(400).json({
                 message: `Come On ! ${user === null || user === void 0 ? void 0 : user.name}, this question already exists in your database 😒`,
             });
+            return;
         }
         const newQa = new Qa_1.default({
             question,
@@ -103,7 +104,8 @@ const generateAnswerWithAI = (req, res, next) => __awaiter(void 0, void 0, void 
     try {
         const { question } = req.body;
         if (!question) {
-            return res.status(400).json({ error: "Question is required" });
+            res.status(400).json({ error: "Question is required" });
+            return;
         }
         const completion = yield openAI.chat.completions.create({
             model: "gpt-4",
@@ -120,7 +122,8 @@ const generateAnswerWithAI = (req, res, next) => __awaiter(void 0, void 0, void 
             max_tokens: 300,
         });
         const generatedAnswer = completion.choices[0].message.content;
-        return res.status(200).json({ generatedAnswer });
+        res.status(200).json({ generatedAnswer });
+        return;
     }
     catch (error) {
         next(error);

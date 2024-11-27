@@ -18,15 +18,16 @@ export const register = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { name, email, password, phone, profilePicture, bio, isAdmin } =
 			req.body;
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
-			return res.status(400).json({
+			res.status(400).json({
 				message: `${email} is already used ! Please try some other email... 🚫`,
 			});
+			return;
 		}
 		const saltRounds = bcryptJS.genSaltSync(12);
 		const hashedPassword = bcryptJS.hashSync(password, saltRounds);
@@ -53,7 +54,7 @@ export const login = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	const { emailOrPhone, password } = req.body;
 	// console.log(req.body);
 	try {
@@ -64,16 +65,18 @@ export const login = async (
 		// console.log(OrPhone, password);
 		const existingUser = await User.findOne(query);
 		if (!existingUser) {
-			return res
+			res
 				.status(400)
 				.json({ message: "No User with this email or Phone...❌" });
+			return;
 		}
 		const passwordMatches = await bcryptJS.compare(
 			password,
 			existingUser.password
 		);
 		if (!passwordMatches) {
-			return res.status(504).json({ message: "Wrong Password !" });
+			res.status(504).json({ message: "Wrong Password !" });
+			return;
 		}
 		const userWithoutPassword = await User.findOne(query).select("-password");
 		const token = jwt.sign(
@@ -98,7 +101,7 @@ export const getAllUsers = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const users = await User.find({});
 		res.status(200).json({
@@ -114,14 +117,15 @@ export const getUserWithId = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId } = req.params;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
+			res.status(404).json({
 				message: `User with id ${userId} does not exist 🚫`,
 			});
+			return;
 		}
 		res.status(200).json({
 			message: `${user?.name} has been fetched successfully 🤩`,
@@ -136,15 +140,16 @@ export const updateUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId } = req.params;
 		const { name, email, phone, profilePicture, bio } = req.body;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
+			res.status(404).json({
 				message: `User with id ${userId} does not exist 🚫`,
 			});
+			return;
 		}
 		const updatedUser = await User.findByIdAndUpdate(
 			{ _id: userId },
@@ -173,21 +178,23 @@ export const updatePassword = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId } = req.params;
 		const { oldPassword, newPassword } = req.body;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
+			res.status(404).json({
 				message: `User with id ${userId} does not exist 🚫`,
 			});
+			return;
 		}
 		const isPasswordCorrect = bcryptJS.compareSync(oldPassword, user.password);
 		if (!isPasswordCorrect) {
-			return res.status(400).json({
+			res.status(400).json({
 				message: `Incorrect old password! Please try again... 😒`,
 			});
+			return;
 		}
 		const saltRounds = bcryptJS.genSaltSync(12);
 		const hashedPassword = bcryptJS.hashSync(newPassword, saltRounds);
@@ -209,14 +216,15 @@ export const deleteUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId } = req.params;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
+			res.status(404).json({
 				message: `User with id ${userId} does not exist 🚫`,
 			});
+			return;
 		}
 		await User.findByIdAndDelete({ _id: userId });
 		res.status(200).json({
@@ -231,13 +239,14 @@ export const generateProfilePicture = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	const { gender } = req.body;
 
 	if (!gender || (gender !== "male" && gender !== "female")) {
-		return res
+		res
 			.status(400)
 			.json({ error: "Please provide a valid gender (male, female)." });
+		return;
 	}
 
 	try {

@@ -31,14 +31,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
 	session({
-		secret: process.env.SECRET_TOKEN!,
+		secret: process.env.SECRET_KEY!,
 		resave: false,
 		saveUninitialized: true,
-		cookie: {
-			secure: process.env.NODE_ENV === "production",
-			httpOnly: true,
-			maxAge: 24 * 60 * 60 * 1000, // 1 day
-		},
 	})
 );
 
@@ -50,10 +45,7 @@ passport.use(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			callbackURL:
-				process.env.NODE_ENV === "production"
-					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback"
-					: "http://localhost:5000/auth/google/callback",
+			callbackURL: "/auth/google/callback",
 			scope: ["profile", "email"],
 		},
 		async (
@@ -89,11 +81,7 @@ passport.use(
 		{
 			clientID: process.env.GITHUB_CLIENT_ID!,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-			callbackURL:
-				process.env.NODE_ENV === "production"
-					? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback"
-					: "http://localhost:5000/auth/github/callback",
-
+			callbackURL: "/auth/github/callback",
 			scope: ["profile", "email"],
 		},
 		async (
@@ -170,14 +158,15 @@ app.use("/api/qa", qaRoute);
 app.use("/api/todo", todoRoute);
 app.use("/api/admin", adminRoute);
 
-app.use((error: any, req: Request, res: Response, next: Function) => {
+app.use((error: any, req: Request, res: Response, next: Function): void => {
 	const errStatus = error.status || 500;
 	const errMessage = error.message || "Something went wrong";
-	return res.status(errStatus).json({
+	res.status(errStatus).json({
 		message: errMessage,
 		success: false,
 		stack: error.stack,
 	});
+	return;
 });
 
 const port = process.env.PORT || 5000;

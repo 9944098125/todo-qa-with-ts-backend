@@ -37,23 +37,16 @@ app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, express_session_1.default)({
-    secret: process.env.SECRET_TOKEN, // Ensure SECRET_TOKEN is defined in .env
-    resave: false, // Avoid saving sessions when no changes are made
-    saveUninitialized: true, // Allow uninitialized sessions
-    cookie: {
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-        httpOnly: true, // Prevent client-side access to cookies
-        maxAge: 24 * 60 * 60 * 1000, // Set cookie expiry (1 day in this case)
-    },
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUninitialized: true,
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 passport_1.default.use(new passport_google_oauth2_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.NODE_ENV === "production"
-        ? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback"
-        : "http://localhost:5000/auth/google/callback",
+    callbackURL: "/auth/google/callback",
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
@@ -77,17 +70,14 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
         return done(err, null);
     }
 })));
+// reverting the changes
 passport_1.default.use(new passport_github2_1.Strategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.NODE_ENV === "production"
-        ? "https://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback"
-        : "http://localhost:5000/auth/github/callback",
+    callbackURL: "/auth/github/callback",
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    //verify the user
-    // console.log(profile);
     try {
         const user = yield User_1.default.findOne({ githubId: profile.id });
         if (!user) {
@@ -107,9 +97,9 @@ passport_1.default.use(new passport_github2_1.Strategy({
 passport_1.default.serializeUser((user, done) => {
     done(null, user);
 });
-passport_1.default.deserializeUser((user, done) => {
+passport_1.default.deserializeUser((user, done) => __awaiter(void 0, void 0, void 0, function* () {
     done(null, user);
-});
+}));
 app.get("/auth/google", passport_1.default.authenticate("google", {
     scope: ["profile", "email"],
 }));
@@ -123,7 +113,7 @@ app.get("/auth/github/callback", passport_1.default.authenticate("github", {
     failureRedirect: "http://localhost:3000/login",
 }));
 app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (req === null || req === void 0 ? void 0 : req.user) {
+    if (req.user) {
         res.status(200).json({ message: "user Login", user: req.user });
     }
     else {
@@ -138,11 +128,12 @@ app.use("/api/admin", admin_1.default);
 app.use((error, req, res, next) => {
     const errStatus = error.status || 500;
     const errMessage = error.message || "Something went wrong";
-    return res.status(errStatus).json({
+    res.status(errStatus).json({
         message: errMessage,
         success: false,
         stack: error.stack,
     });
+    return;
 });
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

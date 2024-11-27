@@ -99,7 +99,8 @@ const generateTodoDescription = (req, res, next) => __awaiter(void 0, void 0, vo
     try {
         const { todoTitle } = req.body;
         if (!todoTitle) {
-            return res.status(400).json({ error: "Todo Title is required" });
+            res.status(400).json({ error: "Todo Title is required" });
+            return;
         }
         const completion = yield openAI.chat.completions.create({
             model: "gpt-4",
@@ -116,7 +117,8 @@ const generateTodoDescription = (req, res, next) => __awaiter(void 0, void 0, vo
             max_tokens: 50,
         });
         const generatedTodoDescription = completion.choices[0].message.content;
-        return res.status(200).json({ generatedTodoDescription });
+        res.status(200).json({ generatedTodoDescription });
+        return;
     }
     catch (error) {
         next(error);

@@ -24,9 +24,10 @@ const userCreatedByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const admin = yield User_1.default.findOne({ _id: adminId });
         const invalidUser = yield User_1.default.findOne({ email });
         if (invalidUser) {
-            return res.status(403).json({
+            res.status(403).json({
                 message: `Already a user exists with this email ${email}, try some other email address ❌`,
             });
+            return;
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
         const hashedPassword = bcryptjs_1.default.hashSync(password, saltRounds);
@@ -68,14 +69,16 @@ const updatedUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
+            res.status(404).json({
                 message: `User with id ${userId} does not exist 🚫`,
             });
+            return;
         }
         if (user.isAdmin) {
-            return res.status(403).json({
+            res.status(403).json({
                 message: `This user ${user.name} is also an admin, so you can't make changes to this user 🚫`,
             });
+            return;
         }
         const updatedUser = yield User_1.default.findByIdAndUpdate(userId, { $set: req.body }, { new: true, runValidators: true });
         yield updatedUser.save();
@@ -95,14 +98,16 @@ const deleteAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         const user = yield User_1.default.findById({ _id: userId });
         const admin = yield User_1.default.findOne({ _id: adminId });
         if (!user) {
-            return res.status(404).json({
+            res.status(404).json({
                 message: `User with id ${userId} does not exist 🚫`,
             });
+            return;
         }
         if (user.isAdmin) {
-            return res.status(403).json({
+            res.status(403).json({
                 message: `This user ${user.name} is also an admin, so you can't delete this user 🚫`,
             });
+            return;
         }
         yield User_1.default.deleteOne({ _id: userId });
         res.status(200).json({
@@ -183,9 +188,10 @@ const deleteQaOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const admin = yield User_1.default.findOne({ _id: adminId });
         const qa = yield Qa_1.default.findOne({ _id: qaId });
         if (!qa) {
-            return res.status(403).json({
+            res.status(403).json({
                 message: `This QA does not exist🚫`,
             });
+            return;
         }
         yield Qa_1.default.findByIdAndDelete({ _id: qaId });
         res.status(200).json({

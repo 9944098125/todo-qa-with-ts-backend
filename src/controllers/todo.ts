@@ -14,7 +14,7 @@ export const createTodo = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { title, description, urgency, deadline, userId } = req.body;
 		const user = await User.findOne({ _id: userId });
@@ -39,7 +39,7 @@ export const getTodoWithUserId = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId } = req.params;
 		const user = await User.findOne({ _id: userId });
@@ -57,7 +57,7 @@ export const updateTodo = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { todoId } = req.params;
 		const { title, description, urgency, deadline, userId } = req.body;
@@ -86,7 +86,7 @@ export const deleteTodo = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { todoId } = req.params;
 		const user = await User.findOne({ _id: req.params.userId });
@@ -103,12 +103,13 @@ export const generateTodoDescription = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { todoTitle } = req.body;
 
 		if (!todoTitle) {
-			return res.status(400).json({ error: "Todo Title is required" });
+			res.status(400).json({ error: "Todo Title is required" });
+			return;
 		}
 		const completion = await openAI.chat.completions.create({
 			model: "gpt-4",
@@ -128,7 +129,8 @@ export const generateTodoDescription = async (
 
 		const generatedTodoDescription = completion.choices[0].message.content;
 
-		return res.status(200).json({ generatedTodoDescription });
+		res.status(200).json({ generatedTodoDescription });
+		return;
 	} catch (error) {
 		next(error);
 	}

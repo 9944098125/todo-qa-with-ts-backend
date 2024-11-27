@@ -8,7 +8,7 @@ export const userCreatedByAdmin = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { name, email, password, phone, profilePicture, bio, isAdmin } =
 			req.body;
@@ -16,9 +16,10 @@ export const userCreatedByAdmin = async (
 		const admin = await User.findOne({ _id: adminId });
 		const invalidUser = await User.findOne({ email });
 		if (invalidUser) {
-			return res.status(403).json({
+			res.status(403).json({
 				message: `Already a user exists with this email ${email}, try some other email address ❌`,
 			});
+			return;
 		}
 		const saltRounds = bcryptJS.genSaltSync(12);
 		const hashedPassword = bcryptJS.hashSync(password, saltRounds);
@@ -61,19 +62,21 @@ export const updatedUserByAdmin = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId } = req.params;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
+			res.status(404).json({
 				message: `User with id ${userId} does not exist 🚫`,
 			});
+			return;
 		}
 		if (user.isAdmin) {
-			return res.status(403).json({
+			res.status(403).json({
 				message: `This user ${user.name} is also an admin, so you can't make changes to this user 🚫`,
 			});
+			return;
 		}
 		const updatedUser = await User.findByIdAndUpdate(
 			userId,
@@ -94,20 +97,22 @@ export const deleteAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId, adminId } = req.params;
 		const user = await User.findById({ _id: userId });
 		const admin = await User.findOne({ _id: adminId });
 		if (!user) {
-			return res.status(404).json({
+			res.status(404).json({
 				message: `User with id ${userId} does not exist 🚫`,
 			});
+			return;
 		}
 		if (user.isAdmin) {
-			return res.status(403).json({
+			res.status(403).json({
 				message: `This user ${user.name} is also an admin, so you can't delete this user 🚫`,
 			});
+			return;
 		}
 		await User.deleteOne({ _id: userId });
 		res.status(200).json({
@@ -123,7 +128,7 @@ export const createQaForAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { question, answer, importance, toolId } = req.body;
 		const { userId, adminId } = req.params;
@@ -151,7 +156,7 @@ export const getQaOfAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId } = req.params;
 		const user = await User.findOne({ _id: userId });
@@ -169,7 +174,7 @@ export const updateQaOfAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { question, answer, importance, toolId } = req.body;
 		const { userId, qaId, adminId } = req.params;
@@ -197,16 +202,17 @@ export const deleteQaOfAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId, qaId, adminId } = req.params;
 		const user = await User.findOne({ _id: userId });
 		const admin = await User.findOne({ _id: adminId });
 		const qa = await Qa.findOne({ _id: qaId });
 		if (!qa) {
-			return res.status(403).json({
+			res.status(403).json({
 				message: `This QA does not exist🚫`,
 			});
+			return;
 		}
 		await Qa.findByIdAndDelete({ _id: qaId });
 		res.status(200).json({
@@ -221,7 +227,7 @@ export const createTodoForAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { title, description, urgency, deadline } = req.body;
 		const { userId, adminId } = req.params;
@@ -248,7 +254,7 @@ export const getTodoOfAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId, adminId } = req.params;
 		const user = await User.findOne({ _id: userId });
@@ -267,7 +273,7 @@ export const updateTodoOfAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { title, description, urgency, deadline } = req.body;
 		const { userId, todoId, adminId } = req.params;
@@ -296,7 +302,7 @@ export const deleteTodoOfAUser = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { userId, todoId, adminId } = req.params;
 		const user = await User.findOne({ _id: userId });
