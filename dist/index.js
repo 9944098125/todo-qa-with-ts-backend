@@ -37,9 +37,10 @@ app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, express_session_1.default)({
-    secret: process.env.SECRET_KEY,
+    secret: process.env.SESSION_SECRET || "your-session-secret", // Add a session secret
     resave: false,
     saveUninitialized: true,
+    cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
