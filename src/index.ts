@@ -69,7 +69,6 @@ passport.use(
 						name: profile?.displayName,
 						email: profile?.emails[0].value,
 						profilePicture: profile?.photos?.[0].value,
-						phone: profile?.phoneNumbers?.[0].value,
 						googleId: profile?.id,
 					});
 					await user.save();
@@ -105,7 +104,6 @@ passport.use(
 						name: profile?.displayName,
 						profilePicture: profile?.photos?.[0].value,
 						githubId: profile?.id,
-						phone: profile?.phone,
 					});
 					await newUser.save();
 				}
