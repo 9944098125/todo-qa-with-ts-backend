@@ -1,15 +1,15 @@
 ######### REGISTER
-POST https://todo-qa-with-ts-backend.onrender.com/api/auth/register
+POST https://todo-qa-with-ts-backend-production.up.railway.app/api/auth/register
 Content-Type: application/json
 
 {
-  "name":"A S R Bala",
-  "email":"bala@yopmail.com",
+  "name":"Akella Srinivas Prasad",
+  "email":"srini@yopmail.com",
   "password":"Srinivas@8",
-  "phone":"7842171729",
-  "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/v1720865877/gkfphz7dd4kru4eiwmbx.jpg",
-  "bio":"Bank Employee",
-  "isAdmin":false
+  "phone":"7995643201",
+  "profilePicture":"https://asset.cloudinary.com/dakda5ni3/669d6923a2d10867c9f7d348575765d4",
+  "bio":"MERN STACK DEVELOPER",
+  "isAdmin":true
 }
 
 ######### LOGIN

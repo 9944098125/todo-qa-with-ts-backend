@@ -105,6 +105,7 @@ passport.use(
 						name: profile?.displayName,
 						profilePicture: profile?.photos?.[0].value,
 						githubId: profile?.id,
+						phone: profile?.phone,
 					});
 					await newUser.save();
 				}
