@@ -70,6 +70,7 @@ passport.use(
 						email: profile?.emails[0].value,
 						profilePicture: profile?.photos?.[0].value,
 						googleId: profile?.id,
+						phone: profile?.phone || "7995643201",
 					});
 					await user.save();
 				}
@@ -104,6 +105,7 @@ passport.use(
 						name: profile?.displayName,
 						profilePicture: profile?.photos?.[0].value,
 						githubId: profile?.id,
+						phone: profile?.phone || "7995643201",
 					});
 					await newUser.save();
 				}
