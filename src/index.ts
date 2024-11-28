@@ -35,9 +35,7 @@ app.use(
 		resave: false,
 		saveUninitialized: true,
 		cookie: {
-			secure:
-				process.env.NODE_ENV === "production" &&
-				process.env.USE_HTTPS === "true",
+			secure: process.env.NODE_ENV === "production",
 			httpOnly: true,
 			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 		},
@@ -52,7 +50,8 @@ passport.use(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			callbackURL: "/auth/google/callback",
+			callbackURL:
+				"http://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback",
 			scope: ["profile", "email"],
 		},
 		async (
@@ -87,7 +86,8 @@ passport.use(
 		{
 			clientID: process.env.GITHUB_CLIENT_ID!,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-			callbackURL: "/auth/github/callback",
+			callbackURL:
+				"http://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback",
 			scope: ["profile", "email"],
 		},
 		async (
