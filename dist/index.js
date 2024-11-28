@@ -36,15 +36,16 @@ app.use((0, cors_1.default)({
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.set("trust proxy", 1); // you need to add this
 app.use((0, express_session_1.default)({
     secret: process.env.SECRET_TOKEN,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    proxy: true, // this is optional it depend which server you host, i am not sure about Heroku if you need it or not
     cookie: {
-        secure: process.env.NODE_ENV === "production" &&
-            process.env.USE_HTTPS === "true",
-        httpOnly: true,
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: "auto", // this will set to false on developement, but true on Heroku since is https so this setting is required
+        maxAge: 10000, // 10 sec for testing
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", //by default in developement this is false if you're in developement mode
     },
 }));
 app.use(passport_1.default.initialize());
@@ -52,7 +53,7 @@ app.use(passport_1.default.session());
 passport_1.default.use(new passport_google_oauth2_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "/auth/google/callback",
+    callbackURL: "http://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback",
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
@@ -78,7 +79,7 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
 passport_1.default.use(new passport_github2_1.Strategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "/auth/github/callback",
+    callbackURL: "http://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback",
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

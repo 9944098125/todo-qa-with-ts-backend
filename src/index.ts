@@ -29,15 +29,17 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.set("trust proxy", 1); // you need to add this
 app.use(
 	session({
 		secret: process.env.SECRET_TOKEN!,
 		resave: false,
-		saveUninitialized: true,
+		saveUninitialized: false,
+		proxy: true, // this is optional it depend which server you host, i am not sure about Heroku if you need it or not
 		cookie: {
-			secure: process.env.NODE_ENV === "production",
-			httpOnly: true,
-			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+			secure: "auto", // this will set to false on developement, but true on Heroku since is https so this setting is required
+			maxAge: 10000, // 10 sec for testing
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", //by default in developement this is false if you're in developement mode
 		},
 	})
 );
