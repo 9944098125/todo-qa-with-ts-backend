@@ -31,11 +31,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
 	session({
-		secret: process.env.SECRET_TOKEN!, // Add a session secret
+		secret: process.env.SECRET_TOKEN!,
 		resave: false,
 		saveUninitialized: true,
 		cookie: {
-			secure: process.env.NODE_ENV === "production",
+			secure:
+				process.env.NODE_ENV === "production" &&
+				process.env.USE_HTTPS === "true",
 			httpOnly: true,
 			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 		},

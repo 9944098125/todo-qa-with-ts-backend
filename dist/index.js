@@ -37,11 +37,12 @@ app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use((0, express_session_1.default)({
-    secret: process.env.SECRET_TOKEN, // Add a session secret
+    secret: process.env.SECRET_TOKEN,
     resave: false,
     saveUninitialized: true,
     cookie: {
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production" &&
+            process.env.USE_HTTPS === "true",
         httpOnly: true,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
