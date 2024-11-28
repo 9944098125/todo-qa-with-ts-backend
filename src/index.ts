@@ -126,7 +126,11 @@ passport.deserializeUser(async (user: any, done: any) => {
 app.get(
 	"/auth/google",
 	passport.authenticate("google", {
-		scope: ["profile", "email"],
+		scope: [
+			"profile",
+			"email",
+			"https://www.googleapis.com/auth/user.phonenumbers.read",
+		],
 	})
 );
 
@@ -140,7 +144,7 @@ app.get(
 
 app.get(
 	"/auth/github",
-	passport.authenticate("github", { scope: ["user:email"] })
+	passport.authenticate("github", { scope: ["read:user", "user:email"] })
 );
 
 app.get(
