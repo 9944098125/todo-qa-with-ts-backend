@@ -53,10 +53,10 @@ app.use(passport_1.default.session());
 passport_1.default.use(new passport_google_oauth2_1.Strategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback",
+    callbackURL: "/auth/google/callback",
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a;
     try {
         let user = yield User_1.default.findOne({ googleId: profile.id });
         if (!user) {
@@ -64,9 +64,10 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
                 name: profile === null || profile === void 0 ? void 0 : profile.displayName,
                 email: profile === null || profile === void 0 ? void 0 : profile.emails[0].value,
                 profilePicture: (_a = profile === null || profile === void 0 ? void 0 : profile.photos) === null || _a === void 0 ? void 0 : _a[0].value,
-                phone: (_b = profile === null || profile === void 0 ? void 0 : profile.phoneNumbers) === null || _b === void 0 ? void 0 : _b[0].value,
                 googleId: profile === null || profile === void 0 ? void 0 : profile.id,
+                phone: profile === null || profile === void 0 ? void 0 : profile.phone,
             });
+            console.log("user", user);
             yield user.save();
         }
         return done(null, user); // Ensure this is the correct user
@@ -79,7 +80,7 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
 passport_1.default.use(new passport_github2_1.Strategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "http://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback",
+    callbackURL: "/auth/github/callback",
     scope: ["profile", "email"],
 }, (accessToken, refreshToken, profile, done) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -90,7 +91,9 @@ passport_1.default.use(new passport_github2_1.Strategy({
                 name: profile === null || profile === void 0 ? void 0 : profile.displayName,
                 profilePicture: (_a = profile === null || profile === void 0 ? void 0 : profile.photos) === null || _a === void 0 ? void 0 : _a[0].value,
                 githubId: profile === null || profile === void 0 ? void 0 : profile.id,
+                phone: profile === null || profile === void 0 ? void 0 : profile.phone,
             });
+            console.log("user", user);
             yield newUser.save();
         }
         return done(null, user);
@@ -106,13 +109,17 @@ passport_1.default.deserializeUser((user, done) => __awaiter(void 0, void 0, voi
     done(null, user);
 }));
 app.get("/auth/google", passport_1.default.authenticate("google", {
-    scope: ["profile", "email"],
+    scope: [
+        "profile",
+        "email",
+        "https://www.googleapis.com/auth/user.phonenumbers.read",
+    ],
 }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", {
     successRedirect: "http://localhost:3000",
     failureRedirect: "http://localhost:3000/login",
 }));
-app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["user:email"] }));
+app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["read:user", "user:email"] }));
 app.get("/auth/github/callback", passport_1.default.authenticate("github", {
     successRedirect: "http://localhost:3000",
     failureRedirect: "http://localhost:3000/login",
