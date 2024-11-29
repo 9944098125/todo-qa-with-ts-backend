@@ -65,7 +65,7 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
                 email: profile === null || profile === void 0 ? void 0 : profile.emails[0].value,
                 profilePicture: (_a = profile === null || profile === void 0 ? void 0 : profile.photos) === null || _a === void 0 ? void 0 : _a[0].value,
                 googleId: profile === null || profile === void 0 ? void 0 : profile.id,
-                phone: profile === null || profile === void 0 ? void 0 : profile.phone,
+                phone: (profile === null || profile === void 0 ? void 0 : profile.phone) ? profile === null || profile === void 0 ? void 0 : profile.phone : profile === null || profile === void 0 ? void 0 : profile.id,
             });
             console.log("user", user);
             yield user.save();
@@ -91,7 +91,7 @@ passport_1.default.use(new passport_github2_1.Strategy({
                 name: profile === null || profile === void 0 ? void 0 : profile.displayName,
                 profilePicture: (_a = profile === null || profile === void 0 ? void 0 : profile.photos) === null || _a === void 0 ? void 0 : _a[0].value,
                 githubId: profile === null || profile === void 0 ? void 0 : profile.id,
-                phone: profile === null || profile === void 0 ? void 0 : profile.phone,
+                phone: (profile === null || profile === void 0 ? void 0 : profile.phone) ? profile === null || profile === void 0 ? void 0 : profile.phone : profile === null || profile === void 0 ? void 0 : profile.id,
             });
             console.log("user", user);
             yield newUser.save();

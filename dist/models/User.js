@@ -21,7 +21,8 @@ const userSchema = new mongoose_1.default.Schema({
     },
     phone: {
         type: String,
-        default: "7995643201",
+        unique: true,
+        required: true,
     },
     bio: {
         type: String,
