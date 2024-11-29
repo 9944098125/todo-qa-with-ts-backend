@@ -52,8 +52,7 @@ passport.use(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			callbackURL:
-				"http://todo-qa-with-ts-backend-production.up.railway.app/auth/google/callback",
+			callbackURL: "/auth/google/callback",
 			scope: ["profile", "email"],
 		},
 		async (
@@ -72,6 +71,7 @@ passport.use(
 						googleId: profile?.id,
 						phone: profile?.phone,
 					});
+					console.log("user", user);
 					await user.save();
 				}
 				return done(null, user); // Ensure this is the correct user
@@ -88,8 +88,7 @@ passport.use(
 		{
 			clientID: process.env.GITHUB_CLIENT_ID!,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-			callbackURL:
-				"http://todo-qa-with-ts-backend-production.up.railway.app/auth/github/callback",
+			callbackURL: "/auth/github/callback",
 			scope: ["profile", "email"],
 		},
 		async (
@@ -107,6 +106,7 @@ passport.use(
 						githubId: profile?.id,
 						phone: profile?.phone,
 					});
+					console.log("user", user);
 					await newUser.save();
 				}
 				return done(null, user);
