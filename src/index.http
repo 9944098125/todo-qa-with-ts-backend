@@ -4,9 +4,9 @@ Content-Type: application/json
 
 {
   "name":"Akella Srinivas Prasad",
-  "email":"srini@yopmail.com",
-  "password":"Srinivas@8",
-  "phone":"7995643201",
+  "email":"EMAIL",
+  "password":"PASSWORD",
+  "phone":"PHONE",
   "profilePicture":"https://asset.cloudinary.com/dakda5ni3/669d6923a2d10867c9f7d348575765d4",
   "bio":"MERN STACK DEVELOPER",
   "isAdmin":true
