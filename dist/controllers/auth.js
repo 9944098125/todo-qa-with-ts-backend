@@ -211,7 +211,7 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.deleteUser = deleteUser;
 const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { gender } = req.body;
+    const { gender, userId } = req.body;
     if (!gender || (gender !== "male" && gender !== "female")) {
         res
             .status(400)
@@ -228,6 +228,7 @@ const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, voi
         });
         // Get the generated image URL
         const imageUrl = response.data[0].url;
+        User_1.default.findByIdAndUpdate(userId, { profilePicture: imageUrl }, { new: true });
         // Send the avatar image URL in response
         res.json({ imageUrl });
     }
