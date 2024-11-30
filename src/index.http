@@ -4,10 +4,10 @@ Content-Type: application/json
 
 {
   "name":"Akella Srinivas Prasad",
-  "email":"EMAIL",
-  "password":"PASSWORD",
-  "phone":"PHONE",
-  "profilePicture":"https://asset.cloudinary.com/dakda5ni3/669d6923a2d10867c9f7d348575765d4",
+  "email":"srini@yopmail.com",
+  "password":"Srinivas@8",
+  "phone":"7995643201",
+  "profilePicture":"https://res.cloudinary.com/dakda5ni3/image/upload/w_1000,ar_1:1,c_fill,g_auto,e_art:hokusai/v1730039128/lxbayxym60pmlsme6l0w.png",
   "bio":"MERN STACK DEVELOPER",
   "isAdmin":true
 }
