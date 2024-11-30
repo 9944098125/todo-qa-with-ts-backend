@@ -21,7 +21,7 @@ const app: Application = express();
 app.use(
 	cors({
 		origin: "http://localhost:3000",
-		methods: "GET,POST,PUT,DELETE",
+		methods: "GET,POST,PATCH,PUT,DELETE",
 		credentials: true,
 	})
 );
@@ -70,7 +70,7 @@ passport.use(
 						email: profile?.emails[0].value,
 						profilePicture: profile?.photos?.[0].value,
 						googleId: profile?.id,
-						phone: profile?.phone ? profile?.phone : profile?.id,
+						phone: profile?.phone ? profile.phone : profile?.id,
 					});
 					console.log("user", user);
 					await user.save();
@@ -106,7 +106,7 @@ passport.use(
 						name: profile?.displayName,
 						profilePicture: profile?.photos?.[0].value,
 						githubId: profile?.id,
-						phone: profile?.phone ? profile?.phone : profile?.id,
+						phone: profile?.phone ? profile.phone : profile?.id,
 					});
 					console.log("user", user);
 					await newUser.save();
