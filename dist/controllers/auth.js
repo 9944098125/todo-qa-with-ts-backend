@@ -237,7 +237,7 @@ const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, voi
         }
         const uniqueDetail = user.name || user.email || `ID: ${userId}`;
         // Create a unique prompt for generating an image
-        const prompt = `A professional, high-quality, realistic 3D photo of a ${gender} person with the unique identifier ${uniqueDetail}, captured with stunning detail and a natural background.`;
+        const prompt = `A stunning beautiful AI high quality image of a ${gender} person with professional look.`;
         // Generate image using OpenAI
         const response = yield openAI.images.generate({
             prompt,

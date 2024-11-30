@@ -270,7 +270,7 @@ export const generateProfilePicture = async (
 		const uniqueDetail = user.name || user.email || `ID: ${userId}`;
 
 		// Create a unique prompt for generating an image
-		const prompt = `A professional, high-quality, realistic 3D photo of a ${gender} person with the unique identifier ${uniqueDetail}, captured with stunning detail and a natural background.`;
+		const prompt = `A stunning beautiful AI high quality image of a ${gender} person with professional look.`;
 
 		// Generate image using OpenAI
 		const response = await openAI.images.generate({
