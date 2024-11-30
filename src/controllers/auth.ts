@@ -267,8 +267,6 @@ export const generateProfilePicture = async (
 			return;
 		}
 
-		const uniqueDetail = user.name || user.email || `ID: ${userId}`;
-
 		// Create a unique prompt for generating an image
 		const prompt = `A stunning beautiful AI high quality image of a ${gender} person with professional look.`;
 
