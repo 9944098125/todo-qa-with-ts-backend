@@ -228,9 +228,9 @@ const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, voi
         });
         // Get the generated image URL
         const imageUrl = response.data[0].url;
-        User_1.default.findByIdAndUpdate(userId, { profilePicture: imageUrl }, { new: true });
+        const updatedUser = yield User_1.default.findByIdAndUpdate(userId, { profilePicture: imageUrl }, { new: true });
         // Send the avatar image URL in response
-        res.json({ imageUrl });
+        res.json({ user: updatedUser });
     }
     catch (error) {
         next(error);
