@@ -110,7 +110,7 @@ exports.getAllUsers = getAllUsers;
 const getUserWithId = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.params;
-        const user = yield User_1.default.findById({ _id: userId });
+        const user = yield User_1.default.findOne({ _id: userId });
         if (!user) {
             res.status(404).json({
                 message: `User with id ${userId} does not exist 🚫`,
@@ -211,28 +211,57 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.deleteUser = deleteUser;
 const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { gender, userId } = req.body;
+    // Validate input
     if (!gender || (gender !== "male" && gender !== "female")) {
-        res
-            .status(400)
-            .json({ error: "Please provide a valid gender (male, female)." });
+        res.status(400).json({
+            error: "Please provide a valid gender (male or female).",
+        });
+        return;
+    }
+    if (!userId) {
+        res.status(400).json({
+            error: "User ID is required.",
+        });
         return;
     }
     try {
-        // Prompt OpenAI's DALL·E model to generate an avatar based on gender
-        const prompt = `A professional realistic hot photo of a ${gender} person in a high quality setting`;
+        // Fetch user's name or other unique information
+        const user = yield User_1.default.findById(userId);
+        if (!user) {
+            res.status(404).json({
+                error: "User not found.",
+            });
+            return;
+        }
+        const uniqueDetail = user.name || user.email || `ID: ${userId}`;
+        // Create a unique prompt for generating an image
+        const prompt = `A professional, high-quality, realistic 3D photo of a ${gender} person with the unique identifier ${uniqueDetail}, captured with stunning detail and a natural background.`;
+        // Generate image using OpenAI
         const response = yield openAI.images.generate({
-            prompt: prompt, // Text prompt for image generation
+            prompt,
             n: 1, // Generate 1 image
-            size: "512x512", // Image size (can be customized)
+            size: "512x512", // Specify desired image resolution
         });
-        // Get the generated image URL
-        const imageUrl = response.data[0].url;
+        // Check if an image was successfully generated
+        const imageUrl = (_a = response.data[0]) === null || _a === void 0 ? void 0 : _a.url;
+        if (!imageUrl) {
+            res.status(500).json({
+                error: "Failed to generate an image. Please try again.",
+            });
+            return;
+        }
+        // Update user's profile picture in the database
         const updatedUser = yield User_1.default.findByIdAndUpdate(userId, { profilePicture: imageUrl }, { new: true });
-        // Send the avatar image URL in response
-        res.json({ user: updatedUser });
+        // Respond with updated user information
+        res.status(200).json({
+            message: "Profile picture updated successfully.",
+            user: updatedUser,
+        });
     }
     catch (error) {
+        // Pass errors to the global error handler
         next(error);
     }
 });

@@ -143,7 +143,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ############ GET ALL USERS BY ADMIN
-GET https://todo-qa-with-ts-backend.onrender.com/api/admin/users
+GET http://localhost:5000/api/admin/users
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
 
@@ -270,5 +270,6 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
 {
-  "gender":"female"
+  "gender":"female",
+  "userId":"6749d7db2336addb756acca8"
 }
