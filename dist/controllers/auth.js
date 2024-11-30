@@ -220,7 +220,7 @@ const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, voi
     }
     try {
         // Prompt OpenAI's DALL·E model to generate an avatar based on gender
-        const prompt = `A professional profile photo of a ${gender} person in a professional setting`;
+        const prompt = `A professional 3d profile photo of a ${gender} person in a high quality professional setting`;
         const response = yield openAI.images.generate({
             prompt: prompt, // Text prompt for image generation
             n: 1, // Generate 1 image

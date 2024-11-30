@@ -251,7 +251,7 @@ export const generateProfilePicture = async (
 
 	try {
 		// Prompt OpenAI's DALL·E model to generate an avatar based on gender
-		const prompt = `A professional profile photo of a ${gender} person in a professional setting`;
+		const prompt = `A professional 3d profile photo of a ${gender} person in a high quality professional setting`;
 
 		const response = await openAI.images.generate({
 			prompt: prompt, // Text prompt for image generation
