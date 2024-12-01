@@ -14,12 +14,15 @@ import {
 	updateTodoOfAUser,
 	userCreatedByAdmin,
 } from "../controllers/admin";
+import { getUserWithId } from "../controllers/auth";
 
 const router = express.Router();
 
 router.route("/createUser/:adminId").post(verifyAdmin, userCreatedByAdmin);
 
 router.route("/users").get(verifyAdmin, getAllUsersList);
+
+router.route("/user").get(verifyAdmin, getUserWithId);
 
 router.route("/updateUser/:userId").patch(verifyAdmin, updatedUserByAdmin);
 

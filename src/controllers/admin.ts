@@ -58,6 +58,29 @@ export const getAllUsersList = async (
 	}
 };
 
+export const getAUser = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		const { userId } = req.query;
+		const user = await User.findOne({ _id: userId });
+		if (!user) {
+			res.status(403).json({
+				message: "No User with this ID",
+			});
+			return;
+		}
+		res.status(200).json({
+			user: user,
+			message: `Fetched ${user.name} details successfully !`,
+		});
+	} catch (err: any) {
+		next(err);
+	}
+};
+
 export const updatedUserByAdmin = async (
 	req: Request,
 	res: Response,

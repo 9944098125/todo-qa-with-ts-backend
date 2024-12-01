@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteTodoOfAUser = exports.updateTodoOfAUser = exports.getTodoOfAUser = exports.createTodoForAUser = exports.deleteQaOfAUser = exports.updateQaOfAUser = exports.getQaOfAUser = exports.createQaForAUser = exports.deleteAUser = exports.updatedUserByAdmin = exports.getAllUsersList = exports.userCreatedByAdmin = void 0;
+exports.deleteTodoOfAUser = exports.updateTodoOfAUser = exports.getTodoOfAUser = exports.createTodoForAUser = exports.deleteQaOfAUser = exports.updateQaOfAUser = exports.getQaOfAUser = exports.createQaForAUser = exports.deleteAUser = exports.updatedUserByAdmin = exports.getAUser = exports.getAllUsersList = exports.userCreatedByAdmin = void 0;
 const User_1 = __importDefault(require("../models/User"));
 const Qa_1 = __importDefault(require("../models/Qa"));
 const Todo_1 = __importDefault(require("../models/Todo"));
@@ -64,6 +64,26 @@ const getAllUsersList = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.getAllUsersList = getAllUsersList;
+const getAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.query;
+        const user = yield User_1.default.findOne({ _id: userId });
+        if (!user) {
+            res.status(403).json({
+                message: "No User with this ID",
+            });
+            return;
+        }
+        res.status(200).json({
+            user: user,
+            message: `Fetched ${user.name} details successfully !`,
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+exports.getAUser = getAUser;
 const updatedUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.params;
