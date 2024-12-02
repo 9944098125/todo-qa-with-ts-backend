@@ -22,7 +22,7 @@ router.route("/createUser/:adminId").post(verifyAdmin, userCreatedByAdmin);
 
 router.route("/users").get(verifyAdmin, getAllUsersList);
 
-router.route("/user").get(verifyAdmin, getUserWithId);
+router.route("/user/:userId").get(verifyAdmin, getUserWithId);
 
 router.route("/updateUser/:userId").patch(verifyAdmin, updatedUserByAdmin);
 
