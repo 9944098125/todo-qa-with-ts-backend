@@ -64,7 +64,7 @@ export const getAUser = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const { userId } = req.query;
+		const { userId } = req.params;
 		const user = await User.findOne({ _id: userId });
 		if (!user) {
 			res.status(403).json({
