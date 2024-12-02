@@ -10,7 +10,7 @@ const auth_1 = require("../controllers/auth");
 const router = express_1.default.Router();
 router.route("/createUser/:adminId").post(verify_1.verifyAdmin, admin_1.userCreatedByAdmin);
 router.route("/users").get(verify_1.verifyAdmin, admin_1.getAllUsersList);
-router.route("/user").get(verify_1.verifyAdmin, auth_1.getUserWithId);
+router.route("/user/:userId").get(verify_1.verifyAdmin, auth_1.getUserWithId);
 router.route("/updateUser/:userId").patch(verify_1.verifyAdmin, admin_1.updatedUserByAdmin);
 router.route("/deleteUser/:userId/:adminId").delete(verify_1.verifyAdmin, admin_1.deleteAUser);
 router.route("/createQa/:userId/:adminId").post(verify_1.verifyAdmin, admin_1.createQaForAUser);

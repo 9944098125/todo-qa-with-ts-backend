@@ -66,7 +66,7 @@ const getAllUsersList = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.getAllUsersList = getAllUsersList;
 const getAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.query;
+        const { userId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         if (!user) {
             res.status(403).json({
