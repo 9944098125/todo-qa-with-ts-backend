@@ -287,15 +287,16 @@ export const generateProfilePicture = async (
 		}
 
 		// Update user's profile picture in the database
-		await User.findByIdAndUpdate(
+		const updatedUser = await User.findByIdAndUpdate(
 			userId,
 			{ profilePicture: imageUrl },
 			{ new: true }
 		);
 
+		// Respond with updated user information
 		res.status(200).json({
 			message: "Profile picture updated successfully.",
-			profilePicture: imageUrl,
+			user: updatedUser,
 		});
 	} catch (error) {
 		// Pass errors to the global error handler
