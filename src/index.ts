@@ -6,6 +6,7 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import { Strategy as GithubStrategy } from "passport-github2";
+import jwt from "jsonwebtoken";
 
 import authRoute from "./routes/auth";
 import qaRoute from "./routes/qa";
@@ -75,7 +76,19 @@ passport.use(
 					console.log("user", user);
 					await user.save();
 				}
-				return done(null, user); // Ensure this is the correct user
+				const token = jwt.sign(
+					{
+						userId: user._id,
+						isAdmin: false,
+					},
+					process.env.SECRET_TOKEN!
+				);
+				const responseToFrontend = {
+					user: user,
+					token: token,
+					message: "Login with Google success",
+				};
+				return done(null, responseToFrontend);
 			} catch (err) {
 				return done(err, null);
 			}
@@ -111,7 +124,19 @@ passport.use(
 					console.log("user", user);
 					await newUser.save();
 				}
-				return done(null, user);
+				const token = jwt.sign(
+					{
+						userId: user._id,
+						isAdmin: false,
+					},
+					process.env.SECRET_TOKEN!
+				);
+				const responseToFrontend = {
+					user: user,
+					token: token,
+					message: "Login with Google success",
+				};
+				return done(null, responseToFrontend);
 			} catch (err: any) {
 				return done(err, null);
 			}

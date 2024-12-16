@@ -20,6 +20,7 @@ const express_session_1 = __importDefault(require("express-session"));
 const passport_1 = __importDefault(require("passport"));
 const passport_google_oauth2_1 = require("passport-google-oauth2");
 const passport_github2_1 = require("passport-github2");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const qa_1 = __importDefault(require("./routes/qa"));
 const todo_1 = __importDefault(require("./routes/todo"));
@@ -70,7 +71,16 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
             console.log("user", user);
             yield user.save();
         }
-        return done(null, user); // Ensure this is the correct user
+        const token = jsonwebtoken_1.default.sign({
+            userId: user._id,
+            isAdmin: false,
+        }, process.env.SECRET_TOKEN);
+        const responseToFrontend = {
+            user: user,
+            token: token,
+            message: "Login with Google success",
+        };
+        return done(null, responseToFrontend);
     }
     catch (err) {
         return done(err, null);
@@ -96,7 +106,16 @@ passport_1.default.use(new passport_github2_1.Strategy({
             console.log("user", user);
             yield newUser.save();
         }
-        return done(null, user);
+        const token = jsonwebtoken_1.default.sign({
+            userId: user._id,
+            isAdmin: false,
+        }, process.env.SECRET_TOKEN);
+        const responseToFrontend = {
+            user: user,
+            token: token,
+            message: "Login with Google success",
+        };
+        return done(null, responseToFrontend);
     }
     catch (err) {
         return done(err, null);
