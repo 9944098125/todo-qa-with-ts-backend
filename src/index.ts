@@ -76,19 +76,7 @@ passport.use(
 					console.log("user", user);
 					await user.save();
 				}
-				const token = jwt.sign(
-					{
-						userId: user._id,
-						isAdmin: false,
-					},
-					process.env.SECRET_TOKEN!
-				);
-				const responseToFrontend = {
-					user: user,
-					token: token,
-					message: "Login with Google success",
-				};
-				return done(null, responseToFrontend);
+				return done(null, user);
 			} catch (err) {
 				return done(err, null);
 			}
@@ -124,19 +112,7 @@ passport.use(
 					console.log("user", user);
 					await newUser.save();
 				}
-				const token = jwt.sign(
-					{
-						userId: user._id,
-						isAdmin: false,
-					},
-					process.env.SECRET_TOKEN!
-				);
-				const responseToFrontend = {
-					user: user,
-					token: token,
-					message: "Login with Google success",
-				};
-				return done(null, responseToFrontend);
+				return done(null, user);
 			} catch (err: any) {
 				return done(err, null);
 			}
@@ -186,7 +162,16 @@ app.get(
 
 app.get("/login/success", async (req, res) => {
 	if (req.user) {
-		res.status(200).json({ message: "user Login", user: req.user });
+		const token = jwt.sign(
+			{
+				user: req.user,
+				isAdmin: false,
+			},
+			process.env.SECRET_TOKEN!
+		);
+		res
+			.status(200)
+			.json({ message: "OAuth Login Success", user: req.user, token: token });
 	} else {
 		console.log("error login/success", req);
 		res.status(400).json({ message: "Not Authorized" });

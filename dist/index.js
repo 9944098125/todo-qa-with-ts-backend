@@ -71,16 +71,7 @@ passport_1.default.use(new passport_google_oauth2_1.Strategy({
             console.log("user", user);
             yield user.save();
         }
-        const token = jsonwebtoken_1.default.sign({
-            userId: user._id,
-            isAdmin: false,
-        }, process.env.SECRET_TOKEN);
-        const responseToFrontend = {
-            user: user,
-            token: token,
-            message: "Login with Google success",
-        };
-        return done(null, responseToFrontend);
+        return done(null, user);
     }
     catch (err) {
         return done(err, null);
@@ -106,16 +97,7 @@ passport_1.default.use(new passport_github2_1.Strategy({
             console.log("user", user);
             yield newUser.save();
         }
-        const token = jsonwebtoken_1.default.sign({
-            userId: user._id,
-            isAdmin: false,
-        }, process.env.SECRET_TOKEN);
-        const responseToFrontend = {
-            user: user,
-            token: token,
-            message: "Login with Google success",
-        };
-        return done(null, responseToFrontend);
+        return done(null, user);
     }
     catch (err) {
         return done(err, null);
@@ -145,7 +127,13 @@ app.get("/auth/github/callback", passport_1.default.authenticate("github", {
 }));
 app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
-        res.status(200).json({ message: "user Login", user: req.user });
+        const token = jsonwebtoken_1.default.sign({
+            user: req.user,
+            isAdmin: false,
+        }, process.env.SECRET_TOKEN);
+        res
+            .status(200)
+            .json({ message: "OAuth Login Success", user: req.user, token: token });
     }
     else {
         console.log("error login/success", req);
