@@ -268,7 +268,7 @@ export const generateProfilePicture = async (
 		}
 
 		// Create a unique prompt for generating an image
-		const prompt = `A stunning beautiful AI high quality image of a ${gender} person with professional look.`;
+		const prompt = `A stunning AI high quality image of a young sexy ${gender} person with professional look.`;
 
 		// Generate image using OpenAI
 		const response = await openAI.images.generate({
