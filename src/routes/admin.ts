@@ -30,7 +30,7 @@ router.route("/deleteUser/:userId/:adminId").delete(verifyAdmin, deleteAUser);
 
 router.route("/createQa/:userId/:adminId").post(verifyAdmin, createQaForAUser);
 
-router.route("/qa/:userId").get(verifyAdmin, getQaOfAUser);
+router.route("/:userId/:toolId").get(verifyAdmin, getQaOfAUser);
 
 router
 	.route("/updateQa/:userId/:qaId/:adminId")

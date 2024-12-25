@@ -181,9 +181,9 @@ export const getQaOfAUser = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const { userId } = req.params;
+		const { userId, toolId } = req.params;
 		const user = await User.findOne({ _id: userId });
-		const qaListOfAUser = await Qa.find({ userId: userId });
+		const qaListOfAUser = await Qa.find({ userId, toolId });
 		res.status(200).json({
 			message: `Hola, ${user.name}, you have fetched all the QAs of ${user.name} successfully 🤩`,
 			qas: qaListOfAUser,
