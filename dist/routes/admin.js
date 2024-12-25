@@ -14,7 +14,7 @@ router.route("/user/:userId").get(verify_1.verifyAdmin, auth_1.getUserWithId);
 router.route("/updateUser/:userId").patch(verify_1.verifyAdmin, admin_1.updatedUserByAdmin);
 router.route("/deleteUser/:userId/:adminId").delete(verify_1.verifyAdmin, admin_1.deleteAUser);
 router.route("/createQa/:userId/:adminId").post(verify_1.verifyAdmin, admin_1.createQaForAUser);
-router.route("/qa/:userId").get(verify_1.verifyAdmin, admin_1.getQaOfAUser);
+router.route("/qa/:userId/:toolId").get(verify_1.verifyAdmin, admin_1.getQaOfAUser);
 router
     .route("/updateQa/:userId/:qaId/:adminId")
     .patch(verify_1.verifyAdmin, admin_1.updateQaOfAUser);

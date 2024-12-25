@@ -236,7 +236,7 @@ const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, voi
             return;
         }
         // Create a unique prompt for generating an image
-        const prompt = `A stunning beautiful AI high quality image of a ${gender} person with professional look.`;
+        const prompt = `A stunning AI high quality image of a young sexy ${gender} person with professional look.`;
         // Generate image using OpenAI
         const response = yield openAI.images.generate({
             prompt,

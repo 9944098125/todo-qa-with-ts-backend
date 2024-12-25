@@ -181,7 +181,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 }
 
 ############# GET A USER'S QA
-GET https://todo-qa-with-ts-backend.onrender.com/api/admin/qa/66a3d2d6063086539ee99def
+GET http://localhost:5000/api/admin/qa/67508f7938b42b9f1056fda2/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjIwMTMxNTF9.HhnFw98y1wT1zDoEpYHHUUUN2Q_olbltjZTcJtnkDYE
 
