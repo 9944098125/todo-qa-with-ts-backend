@@ -17,13 +17,6 @@ export const createQa = async (
 	try {
 		const { question, answer, userId, toolId, importance } = req.body;
 		const user = await User.findOne({ _id: userId });
-		const existingQa = await Qa.findOne({ question });
-		if (existingQa) {
-			res.status(400).json({
-				message: `Come On ! ${user?.name}, this question already exists in your database 😒`,
-			});
-			return;
-		}
 		const newQa = new Qa({
 			question,
 			answer,
