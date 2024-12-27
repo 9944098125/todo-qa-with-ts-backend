@@ -9,6 +9,7 @@ dotenv.config();
 const openAI = new OpenAI({
 	apiKey: process.env.OPEN_AI_API_KEY,
 });
+// open ai api key
 
 export const createTodo = async (
 	req: Request,
