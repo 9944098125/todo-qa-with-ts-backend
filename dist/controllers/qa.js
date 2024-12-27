@@ -26,13 +26,6 @@ const createQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
     try {
         const { question, answer, userId, toolId, importance } = req.body;
         const user = yield User_1.default.findOne({ _id: userId });
-        const existingQa = yield Qa_1.default.findOne({ question });
-        if (existingQa) {
-            res.status(400).json({
-                message: `Come On ! ${user === null || user === void 0 ? void 0 : user.name}, this question already exists in your database 😒`,
-            });
-            return;
-        }
         const newQa = new Qa_1.default({
             question,
             answer,

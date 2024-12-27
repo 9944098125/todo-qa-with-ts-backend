@@ -22,6 +22,7 @@ dotenv_1.default.config();
 const openAI = new openai_1.default({
     apiKey: process.env.OPEN_AI_API_KEY,
 });
+// open ai api key
 const createTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, description, urgency, deadline, userId } = req.body;
