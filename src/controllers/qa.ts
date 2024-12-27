@@ -16,7 +16,9 @@ export const createQa = async (
 ): Promise<void> => {
 	try {
 		const { question, answer, userId, toolId, importance } = req.body;
+		
 		const user = await User.findOne({ _id: userId });
+		
 		const newQa = new Qa({
 			question,
 			answer,
@@ -24,14 +26,18 @@ export const createQa = async (
 			toolId,
 			importance,
 		});
+		
 		await newQa.save();
+		
 		const questionString = question.split(" ");
+		
 		res.status(201).json({
 			message: `Hola, ${user?.name}, now you question ${questionString
 				.slice(0, 3)
 				.join(" ")}... has been saved to your database 🤩`,
 			qa: newQa,
 		});
+		
 	} catch (err: any) {
 		next(err);
 	}
