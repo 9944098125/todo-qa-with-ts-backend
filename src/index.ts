@@ -7,6 +7,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth2";
 import { Strategy as GithubStrategy } from "passport-github2";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 
 import authRoute from "./routes/auth";
 import qaRoute from "./routes/qa";
@@ -26,6 +27,7 @@ app.use(
 		credentials: true,
 	})
 );
+app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

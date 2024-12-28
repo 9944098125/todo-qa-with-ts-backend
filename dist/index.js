@@ -21,6 +21,7 @@ const passport_1 = __importDefault(require("passport"));
 const passport_google_oauth2_1 = require("passport-google-oauth2");
 const passport_github2_1 = require("passport-github2");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const qa_1 = __importDefault(require("./routes/qa"));
 const todo_1 = __importDefault(require("./routes/todo"));
@@ -34,6 +35,7 @@ app.use((0, cors_1.default)({
     methods: "GET,POST,PATCH,PUT,DELETE",
     credentials: true,
 }));
+app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
