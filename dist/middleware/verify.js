@@ -47,7 +47,7 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.verifyAdmin = verifyAdmin;
 const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (req.user) {
+        if (req === null || req === void 0 ? void 0 : req.user) {
             const user = req.user;
             if ((user === null || user === void 0 ? void 0 : user.googleId) || (user === null || user === void 0 ? void 0 : user.githubId)) {
                 next();
@@ -88,7 +88,7 @@ const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.verifyQaOwner = verifyQaOwner;
 const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (req.user) {
+        if (req === null || req === void 0 ? void 0 : req.user) {
             const user = req.user;
             if ((user === null || user === void 0 ? void 0 : user.googleId) || (user === null || user === void 0 ? void 0 : user.githubId)) {
                 next();
@@ -129,15 +129,13 @@ const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.verifyTodoOwner = verifyTodoOwner;
 const verifyToken = (req, res, next) => {
     var _a;
-    if (req.user) {
+    if (req === null || req === void 0 ? void 0 : req.user) {
         const user = req.user;
         if ((user === null || user === void 0 ? void 0 : user.googleId) || (user === null || user === void 0 ? void 0 : user.githubId)) {
             next();
         }
     }
-    const token = req.headers.authorization
-        ? req.headers.authorization.split(" ")[1]
-        : (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.token;
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     if (!token) {
         res.status(403).json({ message: "No token provided" });
         return;

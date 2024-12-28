@@ -48,7 +48,7 @@ export const verifyQaOwner = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		if (req.user) {
+		if (req?.user) {
 			const user = req.user as any;
 			if (user?.googleId || user?.githubId) {
 				next();
@@ -98,7 +98,7 @@ export const verifyTodoOwner = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		if (req.user) {
+		if (req?.user) {
 			const user = req.user as any;
 			if (user?.googleId || user?.githubId) {
 				next();
@@ -147,15 +147,13 @@ export const verifyToken = (
 	res: Response,
 	next: NextFunction
 ): void => {
-	if (req.user) {
+	if (req?.user) {
 		const user = req.user as any;
 		if (user?.googleId || user?.githubId) {
 			next();
 		}
 	}
-	const token = req.headers.authorization
-		? req.headers.authorization.split(" ")[1]
-		: req.cookies?.token;
+	const token = req.headers.authorization?.split(" ")[1];
 
 	if (!token) {
 		res.status(403).json({ message: "No token provided" });
