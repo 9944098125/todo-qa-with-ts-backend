@@ -143,6 +143,8 @@ export const verifyToken = (
 	res: Response,
 	next: NextFunction
 ): void => {
+	console.log("Authorization Header:", req.headers.authorization);
+	console.log("Cookies:", req.cookies);
 	const token = req.headers.authorization
 		? req.headers.authorization.split(" ")[1]
 		: req.cookies["asp-todo-qa-token"];
