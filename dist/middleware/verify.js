@@ -47,7 +47,9 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.verifyAdmin = verifyAdmin;
 const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+        const token = req.headers.authorization
+            ? req.headers.authorization.split(" ")[1]
+            : req.cookies["asp-todo-qa-token"];
         if (!token) {
             res.status(403).json({ message: "Unauthorized! No Token Provided" });
             return;
@@ -82,7 +84,9 @@ const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.verifyQaOwner = verifyQaOwner;
 const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+        const token = req.headers.authorization
+            ? req.headers.authorization.split(" ")[1]
+            : req.cookies["asp-todo-qa-token"];
         if (!token) {
             res.status(403).json({ message: "Unauthorized! No Token Provided" });
             return;

@@ -48,38 +48,43 @@ export const verifyQaOwner = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const token =
-			req.headers.authorization && req.headers.authorization.split(" ")[1];
+		const token = req.headers.authorization
+			? req.headers.authorization.split(" ")[1]
+			: req.cookies["asp-todo-qa-token"];
 
 		if (!token) {
 			res.status(403).json({ message: "Unauthorized! No Token Provided" });
 			return;
 		}
 
-		jwt.verify(token, process.env.SECRET_TOKEN!, async (err, decoded: any) => {
-			if (err) {
-				res.status(403).json({ message: "Invalid Token" });
-				return;
+		jwt.verify(
+			token,
+			process.env.SECRET_TOKEN!,
+			async (err: any, decoded: any) => {
+				if (err) {
+					res.status(403).json({ message: "Invalid Token" });
+					return;
+				}
+
+				req.user = decoded;
+
+				const { qaId } = req.params;
+				const qa = await Qa.findOne({ _id: qaId });
+
+				if (!qa) {
+					res.status(403).json({ message: "QA not Found! 😒" });
+					return;
+				}
+
+				if (qa.userId.equals((req as any).user?.userId)) {
+					next();
+				} else {
+					res.status(400).json({
+						message: "Unauthorized! You are not the owner of this QA",
+					});
+				}
 			}
-
-			req.user = decoded;
-
-			const { qaId } = req.params;
-			const qa = await Qa.findOne({ _id: qaId });
-
-			if (!qa) {
-				res.status(403).json({ message: "QA not Found! 😒" });
-				return;
-			}
-
-			if (qa.userId.equals((req as any).user?.userId)) {
-				next();
-			} else {
-				res.status(400).json({
-					message: "Unauthorized! You are not the owner of this QA",
-				});
-			}
-		});
+		);
 	} catch (error) {
 		res.status(500).json({ message: "Internal Server Error", error });
 	}
@@ -91,38 +96,43 @@ export const verifyTodoOwner = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const token =
-			req.headers.authorization && req.headers.authorization.split(" ")[1];
+		const token = req.headers.authorization
+			? req.headers.authorization.split(" ")[1]
+			: req.cookies["asp-todo-qa-token"];
 
 		if (!token) {
 			res.status(403).json({ message: "Unauthorized! No Token Provided" });
 			return;
 		}
 
-		jwt.verify(token, process.env.SECRET_TOKEN!, async (err, decoded: any) => {
-			if (err) {
-				res.status(403).json({ message: "Invalid Token" });
-				return;
+		jwt.verify(
+			token,
+			process.env.SECRET_TOKEN!,
+			async (err: any, decoded: any) => {
+				if (err) {
+					res.status(403).json({ message: "Invalid Token" });
+					return;
+				}
+
+				req.user = decoded;
+
+				const { todoId } = req.params;
+				const todo = await Todo.findOne({ _id: todoId });
+
+				if (!todo) {
+					res.status(403).json({ message: "Todo Not Found! ❌" });
+					return;
+				}
+
+				if (todo.userId.equals((req as any).user?.userId)) {
+					next();
+				} else {
+					res.status(400).json({
+						message: "Unauthorized! You are not the owner of this Todo",
+					});
+				}
 			}
-
-			req.user = decoded;
-
-			const { todoId } = req.params;
-			const todo = await Todo.findOne({ _id: todoId });
-
-			if (!todo) {
-				res.status(403).json({ message: "Todo Not Found! ❌" });
-				return;
-			}
-
-			if (todo.userId.equals((req as any).user?.userId)) {
-				next();
-			} else {
-				res.status(400).json({
-					message: "Unauthorized! You are not the owner of this Todo",
-				});
-			}
-		});
+		);
 	} catch (error) {
 		res.status(500).json({ message: "Internal Server Error", error });
 	}
