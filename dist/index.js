@@ -127,8 +127,9 @@ app.get("/auth/github/callback", passport_1.default.authenticate("github", {
 }));
 app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
+        const user = req.user;
         const token = jsonwebtoken_1.default.sign({
-            user: req.user,
+            userId: user === null || user === void 0 ? void 0 : user._id,
             isAdmin: false,
         }, process.env.SECRET_TOKEN);
         res

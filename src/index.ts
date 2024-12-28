@@ -162,9 +162,10 @@ app.get(
 
 app.get("/login/success", async (req, res) => {
 	if (req.user) {
+		const user = req.user as any;
 		const token = jwt.sign(
 			{
-				user: req.user,
+				userId: user?._id,
 				isAdmin: false,
 			},
 			process.env.SECRET_TOKEN!
