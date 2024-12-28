@@ -151,6 +151,18 @@ export const updateUser = async (
 			});
 			return;
 		}
+		if (user?.googleId) {
+			res.status(404).json({
+				message: "This is an account created with Google !",
+			});
+			return;
+		}
+		if (user?.githubId) {
+			res.status(404).json({
+				message: "This is an account created with Github !",
+			});
+			return;
+		}
 		const updatedUser = await User.findByIdAndUpdate(
 			{ _id: userId },
 			{
