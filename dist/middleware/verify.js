@@ -117,7 +117,10 @@ const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.verifyTodoOwner = verifyTodoOwner;
 const verifyToken = (req, res, next) => {
     var _a;
-    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
+    const token = req.headers.authorization
+        ? req.headers.authorization.split(" ")[1]
+        : (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.token;
+    // console.log("token in middleware", req?.cookies);
     if (!token) {
         res.status(403).json({ message: "No token provided" });
         return;
@@ -127,6 +130,7 @@ const verifyToken = (req, res, next) => {
             res.status(401).json({ message: "Unauthorized! Invalid token", err });
             return;
         }
+        console.log("decoded", decoded);
         req.user = decoded;
         next();
     });

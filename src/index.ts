@@ -160,9 +160,32 @@ app.get(
 	})
 );
 
+// app.get("/login/success", async (req, res) => {
+// 	if (req.user) {
+// 		const user = req.user as any;
+// 		console.log("user =>", user);
+// 		const token = jwt.sign(
+// 			{
+// 				userId: user?._id,
+// 				isAdmin: false,
+// 			},
+// 			process.env.SECRET_TOKEN!
+// 		);
+// 		res
+// 			.status(200)
+// 			.json({ message: "OAuth Login Success", user: req.user, token: token });
+// 	} else {
+// 		console.log("error login/success", req);
+// 		res.status(400).json({ message: "Not Authorized" });
+// 	}
+// });
+
 app.get("/login/success", async (req, res) => {
 	if (req.user) {
 		const user = req.user as any;
+		// console.log("user =>", user);
+
+		// Create the JWT token
 		const token = jwt.sign(
 			{
 				userId: user?._id,
@@ -170,9 +193,20 @@ app.get("/login/success", async (req, res) => {
 			},
 			process.env.SECRET_TOKEN!
 		);
-		res
-			.status(200)
-			.json({ message: "OAuth Login Success", user: req.user, token: token });
+
+		// Set the token in a cookie
+		res.cookie("asp-todo-qa-token", token, {
+			httpOnly: true, // Makes the cookie inaccessible via JavaScript (security measure)
+			secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
+			sameSite: "strict", // SameSite attribute to prevent CSRF attacks
+			maxAge: 24 * 60 * 60 * 1000, // 1 day expiry (can be adjusted based on your requirement)
+		});
+
+		// Send a success response
+		res.status(200).json({
+			message: "OAuth Login Success",
+			user: req.user,
+		});
 	} else {
 		console.log("error login/success", req);
 		res.status(400).json({ message: "Not Authorized" });
