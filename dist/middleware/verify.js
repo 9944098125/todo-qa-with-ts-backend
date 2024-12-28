@@ -116,7 +116,8 @@ const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 });
 exports.verifyTodoOwner = verifyTodoOwner;
 const verifyToken = (req, res, next) => {
-    const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+    var _a;
+    const token = (_a = req.headers.authorization) === null || _a === void 0 ? void 0 : _a.split(" ")[1];
     if (!token) {
         res.status(403).json({ message: "No token provided" });
         return;

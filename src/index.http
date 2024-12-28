@@ -13,16 +13,16 @@ Content-Type: application/json
 }
 
 ######### LOGIN
-POST https://todo-qa-with-ts-backend.onrender.com/api/auth/login
+POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-  "emailOrPhone":"srinivas@yopmail.com",
+  "emailOrPhone":"srini@yopmail.com",
   "password":"Srinivas@8"
 }
 
 ######## GET ALL USERS
-GET https://todo-qa-with-ts-backend.onrender.com/api/auth
+GET http://localhost:5000/api/auth
 Content-Type: application/json
 
 ######### GET USER WITH ID
@@ -145,7 +145,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyN
 ############ GET ALL USERS BY ADMIN
 GET http://localhost:5000/api/admin/users
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjkyNTBkNmM2MTdlNDc2MGYzZDMxZjEiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MjA4NjUwMDZ9.KWJcGYUMm4W7SEWyr-_5fqQzmode3_dcSsYDqXBC3A4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzRiMzY2Mzc3YmI3ZjU4ZmY0MzgyYTAiLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MzUzOTAxMjN9.lZSJRVXx32bjZ9bPhuSiyTr3H94HsMSytqJNjoz30m0
 
 ################# UPDATE USER BY ADMIN
 PATCH https://todo-qa-with-ts-backend.onrender.com/api/admin/updateUser/66a3cc0aada193bfc6746445
