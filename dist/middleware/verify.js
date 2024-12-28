@@ -47,6 +47,12 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.verifyAdmin = verifyAdmin;
 const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        if (req.user) {
+            const user = req.user;
+            if ((user === null || user === void 0 ? void 0 : user.googleId) || (user === null || user === void 0 ? void 0 : user.githubId)) {
+                next();
+            }
+        }
         const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
         if (!token) {
             res.status(403).json({ message: "Unauthorized! No Token Provided" });
@@ -82,6 +88,12 @@ const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.verifyQaOwner = verifyQaOwner;
 const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        if (req.user) {
+            const user = req.user;
+            if ((user === null || user === void 0 ? void 0 : user.googleId) || (user === null || user === void 0 ? void 0 : user.githubId)) {
+                next();
+            }
+        }
         const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
         if (!token) {
             res.status(403).json({ message: "Unauthorized! No Token Provided" });
@@ -117,10 +129,15 @@ const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.verifyTodoOwner = verifyTodoOwner;
 const verifyToken = (req, res, next) => {
     var _a;
+    if (req.user) {
+        const user = req.user;
+        if ((user === null || user === void 0 ? void 0 : user.googleId) || (user === null || user === void 0 ? void 0 : user.githubId)) {
+            next();
+        }
+    }
     const token = req.headers.authorization
         ? req.headers.authorization.split(" ")[1]
         : (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.token;
-    console.log("token in middleware", req === null || req === void 0 ? void 0 : req.user);
     if (!token) {
         res.status(403).json({ message: "No token provided" });
         return;
