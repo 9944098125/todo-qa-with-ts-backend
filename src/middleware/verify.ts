@@ -147,6 +147,7 @@ export const verifyToken = (
 	res: Response,
 	next: NextFunction
 ): void => {
+	console.log("user", req.user);
 	if (req?.user) {
 		const user = req.user as any;
 		if (user?.googleId || user?.githubId) {

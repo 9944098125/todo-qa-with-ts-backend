@@ -129,6 +129,7 @@ const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 exports.verifyTodoOwner = verifyTodoOwner;
 const verifyToken = (req, res, next) => {
     var _a;
+    console.log("user", req.user);
     if (req === null || req === void 0 ? void 0 : req.user) {
         const user = req.user;
         if ((user === null || user === void 0 ? void 0 : user.googleId) || (user === null || user === void 0 ? void 0 : user.githubId)) {
