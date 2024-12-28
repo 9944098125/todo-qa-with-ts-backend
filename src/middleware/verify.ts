@@ -136,7 +136,7 @@ export const verifyToken = (
 	const token = req.headers.authorization
 		? req.headers.authorization.split(" ")[1]
 		: req.cookies?.token;
-	// console.log("token in middleware", req?.cookies);
+	console.log("token in middleware", req?.user);
 
 	if (!token) {
 		res.status(403).json({ message: "No token provided" });

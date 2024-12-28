@@ -120,7 +120,7 @@ const verifyToken = (req, res, next) => {
     const token = req.headers.authorization
         ? req.headers.authorization.split(" ")[1]
         : (_a = req.cookies) === null || _a === void 0 ? void 0 : _a.token;
-    // console.log("token in middleware", req?.cookies);
+    console.log("token in middleware", req === null || req === void 0 ? void 0 : req.user);
     if (!token) {
         res.status(403).json({ message: "No token provided" });
         return;
