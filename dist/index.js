@@ -159,7 +159,7 @@ app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.cookie("asp-todo-qa-token", token, {
             httpOnly: true, // Makes the cookie inaccessible via JavaScript (security measure)
             secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
-            sameSite: "strict", // SameSite attribute to prevent CSRF attacks
+            sameSite: "none", // SameSite attribute to prevent CSRF attacks
             maxAge: 24 * 60 * 60 * 1000, // 1 day expiry (can be adjusted based on your requirement)
         });
         // Send a success response
