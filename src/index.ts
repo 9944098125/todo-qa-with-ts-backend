@@ -15,6 +15,7 @@ import todoRoute from "./routes/todo";
 import adminRoute from "./routes/admin";
 import { connect } from "./dbConnection/db";
 import User from "./models/User";
+import searchRoute from "./routes/search";
 
 dotenv.config();
 
@@ -220,6 +221,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/qa", qaRoute);
 app.use("/api/todo", todoRoute);
 app.use("/api/admin", adminRoute);
+app.use("/api", searchRoute);
 
 app.use((error: any, req: Request, res: Response, next: Function): void => {
 	const errStatus = error.status || 500;

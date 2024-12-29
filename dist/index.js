@@ -28,6 +28,7 @@ const todo_1 = __importDefault(require("./routes/todo"));
 const admin_1 = __importDefault(require("./routes/admin"));
 const db_1 = require("./dbConnection/db");
 const User_1 = __importDefault(require("./models/User"));
+const search_1 = __importDefault(require("./routes/search"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
@@ -178,6 +179,7 @@ app.use("/api/auth", auth_1.default);
 app.use("/api/qa", qa_1.default);
 app.use("/api/todo", todo_1.default);
 app.use("/api/admin", admin_1.default);
+app.use("/api", search_1.default);
 app.use((error, req, res, next) => {
     const errStatus = error.status || 500;
     const errMessage = error.message || "Something went wrong";
