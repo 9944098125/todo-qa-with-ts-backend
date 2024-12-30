@@ -23,7 +23,7 @@ const app: Application = express();
 
 app.use(
 	cors({
-		origin: "http://localhost:3000",
+		origin: "https://todo-qa-frontend.onrender.com",
 		methods: "GET,POST,PATCH,PUT,DELETE",
 		credentials: true,
 	})
@@ -145,8 +145,8 @@ app.get(
 app.get(
 	"/auth/google/callback",
 	passport.authenticate("google", {
-		successRedirect: "http://localhost:3000",
-		failureRedirect: "http://localhost:3000/login",
+		successRedirect: "https://todo-qa-frontend.onrender.com",
+		failureRedirect: "https://todo-qa-frontend.onrender.com/login",
 	})
 );
 
@@ -158,30 +158,10 @@ app.get(
 app.get(
 	"/auth/github/callback",
 	passport.authenticate("github", {
-		successRedirect: "http://localhost:3000",
-		failureRedirect: "http://localhost:3000/login",
+		successRedirect: "https://todo-qa-frontend.onrender.com",
+		failureRedirect: "https://todo-qa-frontend.onrender.com/login",
 	})
 );
-
-// app.get("/login/success", async (req, res) => {
-// 	if (req.user) {
-// 		const user = req.user as any;
-// 		console.log("user =>", user);
-// 		const token = jwt.sign(
-// 			{
-// 				userId: user?._id,
-// 				isAdmin: false,
-// 			},
-// 			process.env.SECRET_TOKEN!
-// 		);
-// 		res
-// 			.status(200)
-// 			.json({ message: "OAuth Login Success", user: req.user, token: token });
-// 	} else {
-// 		console.log("error login/success", req);
-// 		res.status(400).json({ message: "Not Authorized" });
-// 	}
-// });
 
 app.get("/login/success", async (req, res) => {
 	if (req.user) {

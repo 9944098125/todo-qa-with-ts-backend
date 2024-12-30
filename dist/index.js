@@ -32,7 +32,7 @@ const search_1 = __importDefault(require("./routes/search"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
+    origin: "https://todo-qa-frontend.onrender.com",
     methods: "GET,POST,PATCH,PUT,DELETE",
     credentials: true,
 }));
@@ -120,33 +120,14 @@ app.get("/auth/google", passport_1.default.authenticate("google", {
     ],
 }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", {
-    successRedirect: "http://localhost:3000",
-    failureRedirect: "http://localhost:3000/login",
+    successRedirect: "https://todo-qa-frontend.onrender.com",
+    failureRedirect: "https://todo-qa-frontend.onrender.com/login",
 }));
 app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["read:user", "user:email"] }));
 app.get("/auth/github/callback", passport_1.default.authenticate("github", {
-    successRedirect: "http://localhost:3000",
-    failureRedirect: "http://localhost:3000/login",
+    successRedirect: "https://todo-qa-frontend.onrender.com",
+    failureRedirect: "https://todo-qa-frontend.onrender.com/login",
 }));
-// app.get("/login/success", async (req, res) => {
-// 	if (req.user) {
-// 		const user = req.user as any;
-// 		console.log("user =>", user);
-// 		const token = jwt.sign(
-// 			{
-// 				userId: user?._id,
-// 				isAdmin: false,
-// 			},
-// 			process.env.SECRET_TOKEN!
-// 		);
-// 		res
-// 			.status(200)
-// 			.json({ message: "OAuth Login Success", user: req.user, token: token });
-// 	} else {
-// 		console.log("error login/success", req);
-// 		res.status(400).json({ message: "Not Authorized" });
-// 	}
-// });
 app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
         const user = req.user;
