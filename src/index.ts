@@ -145,8 +145,8 @@ app.get(
 app.get(
 	"/auth/google/callback",
 	passport.authenticate("google", {
-		successRedirect: "https://todo-qa-frontend.onrender.com",
-		failureRedirect: "https://todo-qa-frontend.onrender.com/login",
+		successRedirect: "https://todo-qa-frontend.vercel.app/login",
+		failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 	})
 );
 
@@ -158,8 +158,8 @@ app.get(
 app.get(
 	"/auth/github/callback",
 	passport.authenticate("github", {
-		successRedirect: "https://todo-qa-frontend.onrender.com",
-		failureRedirect: "https://todo-qa-frontend.onrender.com/login",
+		successRedirect: "https://todo-qa-frontend.vercel.app/login",
+		failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 	})
 );
 
@@ -218,7 +218,9 @@ const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
 	connect();
-	console.log(`Server is running on http://localhost:${port}`);
+	console.log(
+		`Server is running on http://todo-qa-with-ts-backend-production.up.railway.app/`
+	);
 });
 
 // command to get secret token

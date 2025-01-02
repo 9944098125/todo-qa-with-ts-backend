@@ -120,13 +120,13 @@ app.get("/auth/google", passport_1.default.authenticate("google", {
     ],
 }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", {
-    successRedirect: "https://todo-qa-frontend.onrender.com",
-    failureRedirect: "https://todo-qa-frontend.onrender.com/login",
+    successRedirect: "https://todo-qa-frontend.vercel.app/login",
+    failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 }));
 app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["read:user", "user:email"] }));
 app.get("/auth/github/callback", passport_1.default.authenticate("github", {
-    successRedirect: "https://todo-qa-frontend.onrender.com",
-    failureRedirect: "https://todo-qa-frontend.onrender.com/login",
+    successRedirect: "https://todo-qa-frontend.vercel.app/login",
+    failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 }));
 app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
@@ -174,7 +174,7 @@ app.use((error, req, res, next) => {
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     (0, db_1.connect)();
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://todo-qa-with-ts-backend-production.up.railway.app/`);
 });
 // command to get secret token
 // require('crypto').randomBytes(64).toString('hex')
