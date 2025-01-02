@@ -32,7 +32,7 @@ const search_1 = __importDefault(require("./routes/search"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "https://todo-qa-frontend.vercel.app/",
+    origin: "https://todo-qa-frontend.vercel.app",
     methods: "GET,POST,PATCH,PUT,DELETE",
     credentials: true,
 }));
@@ -174,7 +174,7 @@ app.use((error, req, res, next) => {
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     (0, db_1.connect)();
-    console.log(`Server is running on http://todo-qa-with-ts-backend-production.up.railway.app/`);
+    console.log(`Server is running on ${port}`);
 });
 // command to get secret token
 // require('crypto').randomBytes(64).toString('hex')
