@@ -32,7 +32,7 @@ const search_1 = __importDefault(require("./routes/search"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "https://todo-qa-frontend.onrender.com",
+    origin: "https://todo-qa-frontend.vercel.app",
     methods: "GET,POST,PATCH,PUT,DELETE",
     credentials: true,
 }));
