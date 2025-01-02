@@ -32,7 +32,7 @@ const search_1 = __importDefault(require("./routes/search"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: "https://todo-qa-frontend.vercel.app",
+    origin: "https://todo-qa-frontend.vercel.app/",
     methods: "GET,POST,PATCH,PUT,DELETE",
     credentials: true,
 }));
@@ -120,12 +120,12 @@ app.get("/auth/google", passport_1.default.authenticate("google", {
     ],
 }));
 app.get("/auth/google/callback", passport_1.default.authenticate("google", {
-    successRedirect: "https://todo-qa-frontend.vercel.app/todo-items",
+    successRedirect: "https://todo-qa-frontend.vercel.app/",
     failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 }));
 app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["read:user", "user:email"] }));
 app.get("/auth/github/callback", passport_1.default.authenticate("github", {
-    successRedirect: "https://todo-qa-frontend.vercel.app/todo-items",
+    successRedirect: "https://todo-qa-frontend.vercel.app/",
     failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 }));
 app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
