@@ -145,7 +145,7 @@ app.get(
 app.get(
 	"/auth/google/callback",
 	passport.authenticate("google", {
-		successRedirect: "https://todo-qa-frontend.vercel.app/",
+		successRedirect: "https://todo-qa-frontend.vercel.app",
 		failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 	})
 );
@@ -158,7 +158,7 @@ app.get(
 app.get(
 	"/auth/github/callback",
 	passport.authenticate("github", {
-		successRedirect: "https://todo-qa-frontend.vercel.app/",
+		successRedirect: "https://todo-qa-frontend.vercel.app",
 		failureRedirect: "https://todo-qa-frontend.vercel.app/login",
 	})
 );
