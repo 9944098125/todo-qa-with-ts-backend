@@ -181,7 +181,7 @@ app.get("/login/success", async (req, res) => {
 		res.cookie("asp-todo-qa-token", token, {
 			httpOnly: true, // Makes the cookie inaccessible via JavaScript (security measure)
 			secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
-			sameSite: "lax", // SameSite attribute to prevent CSRF attacks
+			sameSite: "none", // SameSite attribute to prevent CSRF attacks
 		});
 
 		// Send a success response
