@@ -27,12 +27,6 @@ const userSchema = new mongoose.Schema(
 		isAdmin: {
 			type: Boolean,
 		},
-		googleId: {
-			type: String,
-		},
-		githubId: {
-			type: String,
-		},
 	},
 	{ timestamps: true }
 );

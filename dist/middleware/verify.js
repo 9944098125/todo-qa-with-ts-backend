@@ -47,9 +47,7 @@ const verifyAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.verifyAdmin = verifyAdmin;
 const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = req.headers.authorization
-            ? req.headers.authorization.split(" ")[1]
-            : req.cookies["asp-todo-qa-token"];
+        const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
         if (!token) {
             res.status(403).json({ message: "Unauthorized! No Token Provided" });
             return;
@@ -84,9 +82,7 @@ const verifyQaOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 exports.verifyQaOwner = verifyQaOwner;
 const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = req.headers.authorization
-            ? req.headers.authorization.split(" ")[1]
-            : req.cookies["asp-todo-qa-token"];
+        const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
         if (!token) {
             res.status(403).json({ message: "Unauthorized! No Token Provided" });
             return;
@@ -122,9 +118,7 @@ exports.verifyTodoOwner = verifyTodoOwner;
 const verifyToken = (req, res, next) => {
     console.log("Authorization Header:", req.headers.authorization);
     console.log("Cookies:", req.cookies["connect-side"]);
-    const token = req.headers.authorization
-        ? req.headers.authorization.split(" ")[1]
-        : req.cookies["asp-todo-qa-token"];
+    const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
     if (!token) {
         res.status(403).json({ message: "No token provided" });
         return;
