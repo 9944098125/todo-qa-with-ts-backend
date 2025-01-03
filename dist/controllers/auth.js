@@ -138,18 +138,6 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             });
             return;
         }
-        if (user === null || user === void 0 ? void 0 : user.googleId) {
-            res.status(404).json({
-                message: "This is an account created with Google !",
-            });
-            return;
-        }
-        if (user === null || user === void 0 ? void 0 : user.githubId) {
-            res.status(404).json({
-                message: "This is an account created with Github !",
-            });
-            return;
-        }
         const updatedUser = yield User_1.default.findByIdAndUpdate({ _id: userId }, {
             name,
             email,

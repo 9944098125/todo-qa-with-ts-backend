@@ -95,18 +95,6 @@ export const updatedUserByAdmin = async (
 			});
 			return;
 		}
-		if (user?.googleId) {
-			res.status(404).json({
-				message: "This is an account created with Google !",
-			});
-			return;
-		}
-		if (user?.githubId) {
-			res.status(404).json({
-				message: "This is an account created with Github !",
-			});
-			return;
-		}
 		if (user.isAdmin) {
 			res.status(403).json({
 				message: `This user ${user.name} is also an admin, so you can't make changes to this user 🚫`,
