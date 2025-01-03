@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -163,40 +163,48 @@ app.get(
 	})
 );
 
-app.get("/login/success", async (req, res) => {
-	if (req.user) {
-		console.log("request", req);
-		const user = req.user as any;
-		console.log("user =>", user);
+app.get(
+	"/login/success",
+	async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+		try {
+			if (!req.user) {
+				console.error("User not authenticated");
+				res.status(401).json({ message: "Not Authorized" });
+				return;
+			}
 
-		// Create the JWT token
-		const token = jwt.sign(
-			{
-				userId: user?._id,
-				isAdmin: false,
-			},
-			process.env.SECRET_TOKEN!
-		);
-		console.log("token generated", token);
+			console.log("Authenticated user:", req.user);
 
-		// Set the token in a cookie
-		res.cookie("asp-todo-qa-token", token, {
-			httpOnly: true, // Makes the cookie inaccessible via JavaScript (security measure)
-			secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
-			sameSite: "none", // SameSite attribute to prevent CSRF attacks
-		});
-		console.log("token saved as cookie");
+			const user = req.user as any;
+			const secretToken = process.env.SECRET_TOKEN;
 
-		// Send a success response
-		res.status(200).json({
-			message: "OAuth Login Success",
-			user: req.user,
-		});
-	} else {
-		console.log("error login/success", req);
-		res.status(400).json({ message: "Not Authorized" });
+			if (!secretToken) {
+				console.error("SECRET_TOKEN is missing");
+				res.status(500).json({ message: "Server configuration error" });
+				return;
+			}
+
+			const token = jwt.sign({ userId: user._id, isAdmin: false }, secretToken);
+			console.log("Token generated:", token);
+
+			res.cookie("asp-todo-qa-token", token, {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === "production",
+				sameSite: "none",
+			});
+
+			console.log("Token saved as a cookie");
+
+			res.status(200).json({
+				message: "OAuth Login Success",
+				user: req.user,
+			});
+		} catch (error) {
+			console.error("Error in /login/success:", error);
+			next(error);
+		}
 	}
-});
+);
 
 // use the routes here
 app.use("/api/auth", authRoute);
