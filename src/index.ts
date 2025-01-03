@@ -189,8 +189,9 @@ app.get(
 		);
 		res.cookie("asp-todo-qa-token", token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "none",
+			secure: process.env.NODE_ENV === "production", // Ensure secure cookies for production
+			sameSite: "none", // Allow cross-origin requests
+			maxAge: 3600000, // Set cookie expiration (optional, default: session cookie)
 		});
 		res.redirect("https://todo-qa-frontend.vercel.app");
 	}
@@ -209,8 +210,9 @@ app.get(
 		);
 		res.cookie("asp-todo-qa-token", token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			sameSite: "none",
+			secure: process.env.NODE_ENV === "production", // Ensure secure cookies for production
+			sameSite: "none", // Allow cross-origin requests
+			maxAge: 3600000, // Set cookie expiration (optional, default: session cookie)
 		});
 		res.redirect("https://todo-qa-frontend.vercel.app");
 	}
