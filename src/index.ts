@@ -184,7 +184,7 @@ app.get(
 		console.log("google user", user);
 
 		const token = jwt.sign(
-			{ userId: user._id, isAdmin: false },
+			{ userId: user._id?.toString(), isAdmin: false },
 			process.env.SECRET_TOKEN!
 		);
 		res.cookie("asp-todo-qa-token", token, {
@@ -204,7 +204,7 @@ app.get(
 		console.log("github user", user);
 
 		const token = jwt.sign(
-			{ userId: user._id, isAdmin: false },
+			{ userId: user._id?.toString(), isAdmin: false },
 			process.env.SECRET_TOKEN!
 		);
 		res.cookie("asp-todo-qa-token", token, {

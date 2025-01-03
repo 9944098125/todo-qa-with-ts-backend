@@ -147,9 +147,10 @@ app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["rea
 // 	})
 // );
 app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/login" }), (req, res) => {
+    var _a;
     const user = req.user;
     console.log("google user", user);
-    const token = jsonwebtoken_1.default.sign({ userId: user._id, isAdmin: false }, process.env.SECRET_TOKEN);
+    const token = jsonwebtoken_1.default.sign({ userId: (_a = user._id) === null || _a === void 0 ? void 0 : _a.toString(), isAdmin: false }, process.env.SECRET_TOKEN);
     res.cookie("asp-todo-qa-token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
@@ -158,9 +159,10 @@ app.get("/auth/google/callback", passport_1.default.authenticate("google", { fai
     res.redirect("https://todo-qa-frontend.vercel.app");
 });
 app.get("/auth/github/callback", passport_1.default.authenticate("github", { failureRedirect: "/login" }), (req, res) => {
+    var _a;
     const user = req.user;
     console.log("github user", user);
-    const token = jsonwebtoken_1.default.sign({ userId: user._id, isAdmin: false }, process.env.SECRET_TOKEN);
+    const token = jsonwebtoken_1.default.sign({ userId: (_a = user._id) === null || _a === void 0 ? void 0 : _a.toString(), isAdmin: false }, process.env.SECRET_TOKEN);
     res.cookie("asp-todo-qa-token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
