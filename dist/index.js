@@ -106,11 +106,23 @@ passport_1.default.use(new passport_github2_1.Strategy({
         return done(err, null);
     }
 })));
+// passport.serializeUser((user: any, done: any) => {
+// 	done(null, user);
+// });
+// passport.deserializeUser(async (user: any, done: any) => {
+// 	done(null, user);
+// });
 passport_1.default.serializeUser((user, done) => {
-    done(null, user);
+    done(null, user.id);
 });
-passport_1.default.deserializeUser((user, done) => __awaiter(void 0, void 0, void 0, function* () {
-    done(null, user);
+passport_1.default.deserializeUser((id, done) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield User_1.default.findById(id);
+        done(null, user);
+    }
+    catch (err) {
+        done(err, null);
+    }
 }));
 app.get("/auth/google", passport_1.default.authenticate("google", {
     scope: [
@@ -119,15 +131,43 @@ app.get("/auth/google", passport_1.default.authenticate("google", {
         "https://www.googleapis.com/auth/user.phonenumbers.read",
     ],
 }));
-app.get("/auth/google/callback", passport_1.default.authenticate("google", {
-    successRedirect: "https://todo-qa-frontend.vercel.app",
-    failureRedirect: "https://todo-qa-frontend.vercel.app/login",
-}));
+// app.get(
+// 	"/auth/google/callback",
+// 	passport.authenticate("google", {
+// 		successRedirect: "https://todo-qa-frontend.vercel.app",
+// 		failureRedirect: "https://todo-qa-frontend.vercel.app/login",
+// 	})
+// );
 app.get("/auth/github", passport_1.default.authenticate("github", { scope: ["read:user", "user:email"] }));
-app.get("/auth/github/callback", passport_1.default.authenticate("github", {
-    successRedirect: "https://todo-qa-frontend.vercel.app",
-    failureRedirect: "https://todo-qa-frontend.vercel.app/login",
-}));
+// app.get(
+// 	"/auth/github/callback",
+// 	passport.authenticate("github", {
+// 		successRedirect: "https://todo-qa-frontend.vercel.app",
+// 		failureRedirect: "https://todo-qa-frontend.vercel.app/login",
+// 	})
+// );
+app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "/login" }), (req, res) => {
+    const user = req.user;
+    console.log("google user", user);
+    const token = jsonwebtoken_1.default.sign({ userId: user._id, isAdmin: false }, process.env.SECRET_TOKEN);
+    res.cookie("asp-todo-qa-token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+    });
+    res.redirect("https://todo-qa-frontend.vercel.app");
+});
+app.get("/auth/github/callback", passport_1.default.authenticate("github", { failureRedirect: "/login" }), (req, res) => {
+    const user = req.user;
+    console.log("github user", user);
+    const token = jsonwebtoken_1.default.sign({ userId: user._id, isAdmin: false }, process.env.SECRET_TOKEN);
+    res.cookie("asp-todo-qa-token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+    });
+    res.redirect("https://todo-qa-frontend.vercel.app");
+});
 app.get("/login/success", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.user) {
