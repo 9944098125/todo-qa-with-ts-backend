@@ -190,9 +190,9 @@ app.get(
 		console.log("google token", token);
 		res.cookie("asp-todo-qa-token", token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production", // Ensure secure cookies for production
-			sameSite: "none", // Allow cross-origin requests
-			maxAge: 3600000, // Set cookie expiration (optional, default: session cookie)
+			secure: process.env.NODE_ENV === "production", // Set to false in development
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Adjust based on environment
+			maxAge: 3600000, // Optional expiration time
 		});
 		console.log("google token set in cookies");
 		res.redirect("https://todo-qa-frontend.vercel.app");
@@ -213,9 +213,9 @@ app.get(
 		console.log("github token", token);
 		res.cookie("asp-todo-qa-token", token, {
 			httpOnly: true,
-			secure: process.env.NODE_ENV === "production", // Ensure secure cookies for production
-			sameSite: "none", // Allow cross-origin requests
-			maxAge: 3600000, // Set cookie expiration (optional, default: session cookie)
+			secure: process.env.NODE_ENV === "production", // Set to false in development
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Adjust based on environment
+			maxAge: 3600000, // Optional expiration time
 		});
 		console.log("github token set in cookies");
 		res.redirect("https://todo-qa-frontend.vercel.app");
