@@ -151,12 +151,14 @@ app.get("/auth/google/callback", passport_1.default.authenticate("google", { fai
     const user = req.user;
     console.log("google user", user);
     const token = jsonwebtoken_1.default.sign({ userId: (_a = user._id) === null || _a === void 0 ? void 0 : _a.toString(), isAdmin: false }, process.env.SECRET_TOKEN);
+    console.log("google token", token);
     res.cookie("asp-todo-qa-token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Ensure secure cookies for production
         sameSite: "none", // Allow cross-origin requests
         maxAge: 3600000, // Set cookie expiration (optional, default: session cookie)
     });
+    console.log("google token set in cookies");
     res.redirect("https://todo-qa-frontend.vercel.app");
 });
 app.get("/auth/github/callback", passport_1.default.authenticate("github", { failureRedirect: "/login" }), (req, res) => {
@@ -164,12 +166,14 @@ app.get("/auth/github/callback", passport_1.default.authenticate("github", { fai
     const user = req.user;
     console.log("github user", user);
     const token = jsonwebtoken_1.default.sign({ userId: (_a = user._id) === null || _a === void 0 ? void 0 : _a.toString(), isAdmin: false }, process.env.SECRET_TOKEN);
+    console.log("github token", token);
     res.cookie("asp-todo-qa-token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production", // Ensure secure cookies for production
         sameSite: "none", // Allow cross-origin requests
         maxAge: 3600000, // Set cookie expiration (optional, default: session cookie)
     });
+    console.log("github token set in cookies");
     res.redirect("https://todo-qa-frontend.vercel.app");
 });
 app.get("/login/success", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -180,14 +184,6 @@ app.get("/login/success", (req, res, next) => __awaiter(void 0, void 0, void 0, 
             return;
         }
         console.log("Authenticated user:", req.user);
-        const user = req.user;
-        const token = jsonwebtoken_1.default.sign({ userId: user._id, isAdmin: false }, process.env.SECRET_TOKEN);
-        console.log("Token generated:", token);
-        res.cookie("asp-todo-qa-token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "none",
-        });
         console.log("Token saved as a cookie");
         res.status(200).json({
             message: "OAuth Login Success",

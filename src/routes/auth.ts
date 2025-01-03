@@ -30,3 +30,4 @@ router.route("/:userId/delete").delete(verifyToken, deleteUser);
 router.route("/generateImage").post(verifyToken, generateProfilePicture);
 
 export default router;
+// comment to push the code to git
