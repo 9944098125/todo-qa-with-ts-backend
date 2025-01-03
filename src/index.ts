@@ -176,15 +176,11 @@ app.get(
 			console.log("Authenticated user:", req.user);
 
 			const user = req.user as any;
-			const secretToken = process.env.SECRET_TOKEN;
 
-			if (!secretToken) {
-				console.error("SECRET_TOKEN is missing");
-				res.status(500).json({ message: "Server configuration error" });
-				return;
-			}
-
-			const token = jwt.sign({ userId: user._id, isAdmin: false }, secretToken);
+			const token = jwt.sign(
+				{ userId: user._id, isAdmin: false },
+				process.env.SECRET_TOKEN!
+			);
 			console.log("Token generated:", token);
 
 			res.cookie("asp-todo-qa-token", token, {

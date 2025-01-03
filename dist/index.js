@@ -137,13 +137,7 @@ app.get("/login/success", (req, res, next) => __awaiter(void 0, void 0, void 0, 
         }
         console.log("Authenticated user:", req.user);
         const user = req.user;
-        const secretToken = process.env.SECRET_TOKEN;
-        if (!secretToken) {
-            console.error("SECRET_TOKEN is missing");
-            res.status(500).json({ message: "Server configuration error" });
-            return;
-        }
-        const token = jsonwebtoken_1.default.sign({ userId: user._id, isAdmin: false }, secretToken);
+        const token = jsonwebtoken_1.default.sign({ userId: user._id, isAdmin: false }, process.env.SECRET_TOKEN);
         console.log("Token generated:", token);
         res.cookie("asp-todo-qa-token", token, {
             httpOnly: true,
