@@ -130,19 +130,22 @@ app.get("/auth/github/callback", passport_1.default.authenticate("github", {
 }));
 app.get("/login/success", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.user) {
+        console.log("request", req);
         const user = req.user;
-        // console.log("user =>", user);
+        console.log("user =>", user);
         // Create the JWT token
         const token = jsonwebtoken_1.default.sign({
             userId: user === null || user === void 0 ? void 0 : user._id,
             isAdmin: false,
         }, process.env.SECRET_TOKEN);
+        console.log("token generated", token);
         // Set the token in a cookie
         res.cookie("asp-todo-qa-token", token, {
             httpOnly: true, // Makes the cookie inaccessible via JavaScript (security measure)
             secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
             sameSite: "none", // SameSite attribute to prevent CSRF attacks
         });
+        console.log("token saved as cookie");
         // Send a success response
         res.status(200).json({
             message: "OAuth Login Success",

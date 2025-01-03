@@ -165,8 +165,9 @@ app.get(
 
 app.get("/login/success", async (req, res) => {
 	if (req.user) {
+		console.log("request", req);
 		const user = req.user as any;
-		// console.log("user =>", user);
+		console.log("user =>", user);
 
 		// Create the JWT token
 		const token = jwt.sign(
@@ -176,6 +177,7 @@ app.get("/login/success", async (req, res) => {
 			},
 			process.env.SECRET_TOKEN!
 		);
+		console.log("token generated", token);
 
 		// Set the token in a cookie
 		res.cookie("asp-todo-qa-token", token, {
@@ -183,6 +185,7 @@ app.get("/login/success", async (req, res) => {
 			secure: process.env.NODE_ENV === "production", // Ensures the cookie is only sent over HTTPS in production
 			sameSite: "none", // SameSite attribute to prevent CSRF attacks
 		});
+		console.log("token saved as cookie");
 
 		// Send a success response
 		res.status(200).json({
