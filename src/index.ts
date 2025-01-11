@@ -18,7 +18,7 @@ const app: Application = express();
 
 app.use(
 	cors({
-		origin: "https://todo-qa-frontend.onrender.com",
+		origin: "https://todo-qa-frontend.vercel.app",
 		methods: "GET,POST,PATCH,PUT,DELETE",
 		credentials: true,
 	})
