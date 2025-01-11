@@ -1,0 +1,7 @@
+POST https://todo-qa-with-ts-backend-production.up.railway.app/api/auth/login
+Content-Type: application/json
+
+{
+  "emailOrPhone":"srini@yopmail.com",
+  "password":"Srinivas@8"
+}
