@@ -14,12 +14,7 @@ dotenv.config();
 
 const app: Application = express();
 
-app.use(
-	cors({
-		origin: "https://todo-qa-frontend.vercel.app",
-		methods: "GET,POST,PATCH,PUT,DELETE",
-	})
-);
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
