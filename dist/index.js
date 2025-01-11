@@ -15,7 +15,11 @@ const db_1 = require("./dbConnection/db");
 const search_1 = __importDefault(require("./routes/search"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: "https://todo-qa-frontend.onrender.com/",
+    methods: "GET,POST,PATCH,PUT,DELETE",
+    credentials: true,
+}));
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));

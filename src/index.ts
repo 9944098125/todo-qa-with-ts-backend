@@ -18,6 +18,7 @@ app.use(
 	cors({
 		origin: "https://todo-qa-frontend.onrender.com/",
 		methods: "GET,POST,PATCH,PUT,DELETE",
+		credentials: true,
 	})
 );
 app.use(express.json());
