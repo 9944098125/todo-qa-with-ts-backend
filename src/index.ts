@@ -18,7 +18,6 @@ app.use(
 	cors({
 		origin: "https://todo-qa-frontend.vercel.app",
 		methods: "GET,POST,PATCH,PUT,DELETE",
-		credentials: true,
 	})
 );
 app.use(express.json());
