@@ -14,7 +14,12 @@ dotenv.config();
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+	cors({
+		origin: "https://todo-qa-frontend.onrender.com/",
+		methods: "GET,POST,PATCH,PUT,DELETE",
+	})
+);
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
