@@ -17,9 +17,7 @@ import User from "./models/User";
 dotenv.config();
 
 const app: Application = express();
-app.use(
-	cors()
-);
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,7 +28,7 @@ app.use("/api/qa", qaRoute);
 app.use("/api/todo", todoRoute);
 app.use("/api/admin", adminRoute);
 
-app.use((error: any, req: Request, res: Response, next: Function) => {
+app.use((error: any, req: any, res: any) => {
 	const errStatus = error.status || 500;
 	const errMessage = error.message || "Something went wrong";
 	return res.status(errStatus).json({
