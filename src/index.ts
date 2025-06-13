@@ -17,12 +17,7 @@ import User from "./models/User";
 dotenv.config();
 
 const app: Application = express();
-app.use(
-	cors({
-		origin: "https://todo-qa-with-ts-backend-production.up.railway.app",
-		credentials: true, // allow cookies and credentials
-	})
-);
+app.use(cors());
 
 app.use(express.json());
 app.use(bodyParser.json());

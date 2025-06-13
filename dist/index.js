@@ -14,10 +14,7 @@ const admin_1 = __importDefault(require("./routes/admin"));
 const db_1 = require("./dbConnection/db");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)({
-    origin: "https://todo-qa-with-ts-backend-production.up.railway.app",
-    credentials: true, // allow cookies and credentials
-}));
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
