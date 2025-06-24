@@ -2,17 +2,12 @@ import express, { Application, Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import session from "express-session";
-import passport from "passport";
-import { Strategy as GoogleStrategy } from "passport-google-oauth2";
-import { Strategy as GithubStrategy } from "passport-github2";
 
 import authRoute from "./routes/auth";
 import qaRoute from "./routes/qa";
 import todoRoute from "./routes/todo";
 import adminRoute from "./routes/admin";
 import { connect } from "./dbConnection/db";
-import User from "./models/User";
 
 dotenv.config();
 
