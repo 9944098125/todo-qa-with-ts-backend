@@ -11,6 +11,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"@types/cookie-parser": "^1.4.8",
+		"@types/uuid": "^10.0.0",
 		"bcryptjs": "^2.4.3",
 		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.5",
@@ -23,7 +24,8 @@
 		"openai": "^4.59.0",
 		"passport": "^0.7.0",
 		"passport-github2": "^0.1.12",
-		"passport-google-oauth2": "^0.2.0"
+		"passport-google-oauth2": "^0.2.0",
+		"uuid": "^11.1.0"
 	},
 	"devDependencies": {
 		"@types/bcryptjs": "^2.4.6",

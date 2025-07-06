@@ -3,6 +3,7 @@ import User from "../models/User";
 import Qa from "../models/Qa";
 import Todo from "../models/Todo";
 import bcryptJS from "bcryptjs";
+import { v4 as uuidv4 } from "uuid";
 
 export const userCreatedByAdmin = async (
 	req: Request,
@@ -48,10 +49,40 @@ export const getAllUsersList = async (
 	next: NextFunction
 ) => {
 	try {
-		const users = await User.find();
+		const page = parseInt(req.query.page as string) || 1;
+		const pageSize = parseInt(req.query.pageSize as string) || 20;
+		const skip = (page - 1) * pageSize;
+
+		// Get total count for pagination
+		const totalDocuments = await User.countDocuments();
+		const totalPages = Math.ceil(totalDocuments / pageSize);
+		
+		// Get paginated users list
+		const users = await User.find()
+			.skip(skip)
+			.limit(pageSize)
+			.sort({ createdAt: -1 });
+
+		// Generate request ID
+		const requestId = uuidv4();
+		
+		// Construct URL for meta
+		const baseUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+
 		res.status(200).json({
-			message: "Fetched all the users list...",
-			users: users,
+			status: 200,
+			statusText: "OK",
+			data: {
+				pageNumber: page.toString(),
+				pageSize: pageSize,
+				totalPages: totalPages,
+				totalDocuments: totalDocuments,
+				documents: users
+			},
+			meta: {
+				requestId: requestId,
+				url: baseUrl
+			}
 		});
 	} catch (err: any) {
 		next(err);

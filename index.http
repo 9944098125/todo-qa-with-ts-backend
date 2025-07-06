@@ -38,27 +38,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlY
 }
 
 ######### GET QA
-GET https://todo-qa-with-ts-backend-production.up.railway.app/api/qa/685ec8256a3964581b1c8357/1
+GET https://todo-qa-with-ts-backend-production.up.railway.app/api/qa/685ec8256a3964581b1c8357/1?page=1&pageSize=10
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlYzgyNTZhMzk2NDU4MWIxYzgzNTciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzUxMDQyMjYwfQ.u6hqw4rloXc94ZPTPXKRqFoirnjVKdkHG92jH6wzOcI
 # with api/qa/:userId/:toolId in params
 
 ########### UPDATE QA
-PATCH https://todo-qa-with-ts-backend-production.up.railway.app/api/qa/685ee0836a3964581b1c8387/685ec8256a3964581b1c8357
+PATCH https://todo-qa-with-ts-backend-production.up.railway.app/api/qa/685ecb436a3964581b1c8360/685ec8256a3964581b1c8357
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlYzgyNTZhMzk2NDU4MWIxYzgzNTciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzUxMDQyMjYwfQ.u6hqw4rloXc94ZPTPXKRqFoirnjVKdkHG92jH6wzOcI
 # with api/:qaId/:userId
 
 {
   "question":"What is ReactJS ?",
-  "answer":"ReactJs is a Javascript library that is used for building user interfaces.",
+  "answer":"React is a Javascript library that is used for building user interfaces.",
   "userId":"685ec8256a3964581b1c8357",
   "toolId":"1",
   "importance":"Very Important"
 }
 
 ####### DELETE QA
-DELETE https://todo-qa-with-ts-backend-production.up.railway.app/api/qa/685ee0836a3964581b1c8387/685ec8256a3964581b1c8357
+DELETE https://todo-qa-with-ts-backend-production.up.railway.app/api/qa/685ecb436a3964581b1c8360/685ec8256a3964581b1c8357
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlYzgyNTZhMzk2NDU4MWIxYzgzNTciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzUxMDQyMjYwfQ.u6hqw4rloXc94ZPTPXKRqFoirnjVKdkHG92jH6wzOcI
 # with /api/qa/:qaId/:userId
@@ -77,7 +77,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlY
 }
 
 ##########3 GET TODO
-GET https://todo-qa-with-ts-backend-production.up.railway.app/api/todo/685ec8256a3964581b1c8357
+GET https://todo-qa-with-ts-backend-production.up.railway.app/api/todo/685ec8256a3964581b1c8357?page=1&pageSize=10
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODVlYzgyNTZhMzk2NDU4MWIxYzgzNTciLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzUxMDQyMjYwfQ.u6hqw4rloXc94ZPTPXKRqFoirnjVKdkHG92jH6wzOcI
 # with /api/todo/:userId

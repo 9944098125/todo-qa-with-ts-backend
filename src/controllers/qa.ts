@@ -3,6 +3,8 @@ import Qa from "../models/Qa";
 import User from "../models/User";
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import { v4 as uuidv4 } from "uuid";
+
 dotenv.config();
 // Create a configuration with your OpenAI API key
 const openAI = new OpenAI({
@@ -16,9 +18,9 @@ export const createQa = async (
 ): Promise<void> => {
 	try {
 		const { question, answer, userId, toolId, importance } = req.body;
-		
+
 		const user = await User.findOne({ _id: userId });
-		
+
 		const newQa = new Qa({
 			question,
 			answer,
@@ -26,18 +28,17 @@ export const createQa = async (
 			toolId,
 			importance,
 		});
-		
+
 		await newQa.save();
-		
+
 		const questionString = question.split(" ");
-		
+
 		res.status(201).json({
 			message: `Hola, ${user?.name}, now you question ${questionString
 				.slice(0, 3)
 				.join(" ")}... has been saved to your database 🤩`,
 			qa: newQa,
 		});
-		
 	} catch (err: any) {
 		next(err);
 	}
@@ -50,11 +51,42 @@ export const getQa = async (
 ): Promise<void> => {
 	try {
 		const { userId, toolId } = req.params;
+		const page = parseInt(req.query.page as string) || 1;
+		const pageSize = parseInt(req.query.pageSize as string) || 20;
+		const skip = (page - 1) * pageSize;
+
 		const user = await User.findOne({ _id: userId });
-		const qaSet = await Qa.find({ userId, toolId });
+		
+		// Get total count for pagination
+		const totalDocuments = await Qa.countDocuments({ userId, toolId });
+		const totalPages = Math.ceil(totalDocuments / pageSize);
+		
+		// Get paginated qa list
+		const qaSet = await Qa.find({ userId, toolId })
+			.skip(skip)
+			.limit(pageSize)
+			.sort({ createdAt: -1 });
+
+		// Generate request ID
+		const requestId = uuidv4();
+		
+		// Construct URL for meta
+		const baseUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+
 		res.status(200).json({
-			message: `Hola, ${user?.name}, here is your saved QA set for this tool 🤩`,
-			qa: qaSet,
+			status: 200,
+			statusText: "OK",
+			data: {
+				pageNumber: page.toString(),
+				pageSize: pageSize,
+				totalPages: totalPages,
+				totalDocuments: totalDocuments,
+				documents: qaSet
+			},
+			meta: {
+				requestId: requestId,
+				url: baseUrl
+			}
 		});
 	} catch (err: any) {
 		next(err);
