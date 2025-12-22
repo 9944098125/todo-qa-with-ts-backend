@@ -16,7 +16,16 @@ dotenv.config();
 
 const app: Application = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",   // React dev
+      "http://127.0.0.1:3000",
+      "https://todo-qa-frontend.vercel.app/" // production
+    ],
+    credentials: true, // IMPORTANT
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
@@ -65,4 +74,5 @@ app.listen(port, () => {
 
 // command to get secret token
 // require('crypto').randomBytes(64).toString('hex')
+
 
