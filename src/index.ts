@@ -23,7 +23,6 @@ app.use(
       "http://127.0.0.1:3000",
       "https://todo-qa-frontend.vercel.app/" // production
     ],
-    credentials: true, // IMPORTANT
   })
 );
 app.use(cookieParser());
@@ -74,5 +73,6 @@ app.listen(port, () => {
 
 // command to get secret token
 // require('crypto').randomBytes(64).toString('hex')
+
 
 
