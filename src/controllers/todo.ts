@@ -6,9 +6,13 @@ import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
-// Create a configuration with your OpenAI API key
-const openAI = new OpenAI({
-	apiKey: process.env.OPEN_AI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "http://localhost", // REQUIRED
+    "X-Title": "My MERN App"             // REQUIRED
+  }
 });
 // open ai api key
 
@@ -133,38 +137,49 @@ export const deleteTodo = async (
 };
 
 export const generateTodoDescription = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-	try {
-		const { todoTitle } = req.body;
+  try {
+    const { todoTitle } = req.body;
 
-		if (!todoTitle) {
-			res.status(400).json({ error: "Todo Title is required" });
-			return;
-		}
-		const completion = await openAI.chat.completions.create({
-			model: "gpt-4",
-			messages: [
-				{
-					role: "system",
-					content:
-						"You are an expert in allocating work for the given task names.",
-				},
-				{
-					role: "user",
-					content: todoTitle,
-				},
-			],
-			max_tokens: 50,
-		});
+    if (!todoTitle) {
+      res.status(400).json({ error: "Todo title is required" });
+      return;
+    }
 
-		const generatedTodoDescription = completion.choices[0].message.content;
+    const completion = await openai.chat.completions.create({
+      model: "meta-llama/llama-3.1-8b-instruct", // safe + fast
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a productivity assistant. Generate a short, clear task description based on the given title. Return ONLY the description text. No headings, no quotes."
+        },
+        {
+          role: "user",
+          content: todoTitle
+        }
+      ],
+      max_tokens: 60,
+      temperature: 0.3
+    });
 
-		res.status(200).json({ generatedTodoDescription });
-		return;
-	} catch (error) {
-		next(error);
-	}
+    const generatedTodoDescription =
+      completion.choices?.[0]?.message?.content?.trim();
+
+    if (!generatedTodoDescription) {
+      res.status(500).json({
+        error: "AI failed to generate todo description"
+      });
+      return;
+    }
+
+    res.status(200).json({
+      generatedTodoDescription
+    });
+  } catch (error) {
+    next(error);
+  }
 };
