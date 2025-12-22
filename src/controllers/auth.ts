@@ -240,71 +240,70 @@ export const deleteUser = async (
 	}
 };
 
+import { Request, Response, NextFunction } from "express";
+import User from "../models/User";
+
 export const generateProfilePicture = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-	const { gender, userId } = req.body;
+  try {
+    const { gender, userId } = req.body;
 
-	// Validate input
-	if (!gender || (gender !== "male" && gender !== "female")) {
-		res.status(400).json({
-			error: "Please provide a valid gender (male or female).",
-		});
-		return;
-	}
+    if (!userId) {
+      res.status(400).json({ error: "User ID is required." });
+      return;
+    }
 
-	if (!userId) {
-		res.status(400).json({
-			error: "User ID is required.",
-		});
-		return;
-	}
+    if (!gender || !["male", "female"].includes(gender)) {
+      res.status(400).json({
+        error: "Gender must be either 'male' or 'female'.",
+      });
+      return;
+    }
 
-	try {
-		// Fetch user's name or other unique information
-		const user = await User.findById(userId);
-		if (!user) {
-			res.status(404).json({
-				error: "User not found.",
-			});
-			return;
-		}
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found." });
+      return;
+    }
 
-		// Create a unique prompt for generating an image
-		const prompt = `A stunning AI high quality image of a young sexy ${gender} person with professional look.`;
+    // Safe, professional prompt
+    const prompt = `
+A realistic, high-quality professional profile photo of a ${gender} person.
+Clean background, studio lighting, confident expression.
+Modern business-casual attire.
+Photorealistic, LinkedIn-style headshot.
+`;
 
-		// Generate image using OpenAI
-		const response = await openAI.images.generate({
-			prompt,
-			n: 1, // Generate 1 image
-			size: "512x512", // Specify desired image resolution
-		});
+    const imageResponse = await openai.images.generate({
+      model: "gpt-image-1",
+      prompt,
+      size: "512x512"
+    });
 
-		// Check if an image was successfully generated
-		const imageUrl = response.data[0]?.url;
-		if (!imageUrl) {
-			res.status(500).json({
-				error: "Failed to generate an image. Please try again.",
-			});
-			return;
-		}
+    const imageUrl = imageResponse.data?.[0]?.url;
 
-		// Update user's profile picture in the database
-		const updatedUser = await User.findByIdAndUpdate(
-			userId,
-			{ profilePicture: imageUrl },
-			{ new: true }
-		);
+    if (!imageUrl) {
+      res.status(500).json({
+        error: "Image generation failed. Please try again.",
+      });
+      return;
+    }
 
-		// Respond with updated user information
-		res.status(200).json({
-			message: "Profile picture updated successfully.",
-			user: updatedUser,
-		});
-	} catch (error) {
-		// Pass errors to the global error handler
-		next(error);
-	}
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePicture: imageUrl },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "Profile picture generated successfully.",
+      user: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
+
