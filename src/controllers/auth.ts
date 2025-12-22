@@ -240,9 +240,6 @@ export const deleteUser = async (
 	}
 };
 
-import { Request, Response, NextFunction } from "express";
-import User from "../models/User";
-
 export const generateProfilePicture = async (
   req: Request,
   res: Response,
