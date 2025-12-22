@@ -9,9 +9,13 @@ import OpenAI from "openai";
 import dotenv from "dotenv";
 
 dotenv.config();
-// Create a configuration with your OpenAI API key
-const openAI = new OpenAI({
-	apiKey: process.env.OPEN_AI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "http://localhost",   // REQUIRED
+    "X-Title": "My MERN App"               // REQUIRED
+  }
 });
 
 export const register = async (
