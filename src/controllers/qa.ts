@@ -7,8 +7,13 @@ import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
 // Create a configuration with your OpenAI API key
-const openAI = new OpenAI({
-	apiKey: process.env.OPEN_AI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPEN_AI_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "http://localhost",   // REQUIRED
+    "X-Title": "My MERN App"               // REQUIRED
+  }
 });
 
 export const createQa = async (
@@ -131,38 +136,45 @@ export const deleteQa = async (
 };
 
 export const generateAnswerWithAI = async (
-	req: Request,
-	res: Response,
-	next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
-	try {
-		const { question } = req.body;
+  try {
+    const { question } = req.body;
 
-		if (!question) {
-			res.status(400).json({ error: "Question is required" });
-			return;
-		}
-		const completion = await openAI.chat.completions.create({
-			model: "gpt-4",
-			messages: [
-				{
-					role: "system",
-					content:
-						"You are an expert in answering web development questions regarding all the web technologies.",
-				},
-				{
-					role: "user",
-					content: question,
-				},
-			],
-			max_tokens: 300,
-		});
+    if (!question) {
+      res.status(400).json({ error: "Question is required" });
+      return;
+    }
 
-		const generatedAnswer = completion.choices[0].message.content;
+    const completion = await openai.chat.completions.create({
+      model: "meta-llama/llama-3.1-8b-instruct", // safe OpenRouter model
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are an expert software engineer specializing in web development. Answer clearly and concisely. Return ONLY the answer text."
+        },
+        {
+          role: "user",
+          content: question
+        }
+      ],
+      max_tokens: 300,
+      temperature: 0.4
+    });
 
-		res.status(200).json({ generatedAnswer });
-		return;
-	} catch (error) {
-		next(error);
-	}
+    const generatedAnswer =
+      completion.choices?.[0]?.message?.content?.trim();
+
+    if (!generatedAnswer) {
+      res.status(500).json({ error: "AI failed to generate an answer" });
+      return;
+    }
+
+    res.status(200).json({ generatedAnswer });
+  } catch (error) {
+    next(error);
+  }
 };
