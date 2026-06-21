@@ -15,15 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteQa = exports.updateQa = exports.getQa = exports.createQa = void 0;
 const Qa_1 = __importDefault(require("../models/Qa"));
 const User_1 = __importDefault(require("../models/User"));
+const response_1 = require("../helpers/response");
 const createQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { question, answer, userId, toolId, importance } = req.body;
         const user = yield User_1.default.findOne({ _id: userId });
         const existingQa = yield Qa_1.default.findOne({ question });
         if (existingQa) {
-            return res.status(400).json({
-                message: `Come On ! ${user === null || user === void 0 ? void 0 : user.name}, this question already exists in your database 😒`,
-            });
+            return (0, response_1.sendError)(req, res, 400, `Come On ! ${user === null || user === void 0 ? void 0 : user.name}, this question already exists in your database 😒`);
         }
         const newQa = new Qa_1.default({
             question,
@@ -34,12 +33,9 @@ const createQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         });
         yield newQa.save();
         const questionString = question.split(" ");
-        res.status(201).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name}, now you question ${questionString
-                .slice(0, 3)
-                .join(" ")}... has been saved to your database 🤩`,
-            qa: newQa,
-        });
+        return (0, response_1.sendSuccess)(req, res, 201, `Hola, ${user === null || user === void 0 ? void 0 : user.name}, now you question ${questionString
+            .slice(0, 3)
+            .join(" ")}... has been saved to your database 🤩`, { qa: newQa });
     }
     catch (err) {
         next(err);
@@ -50,10 +46,20 @@ const getQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { userId, toolId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
-        const qaSet = yield Qa_1.default.find({ userId, toolId });
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const filter = { userId, toolId };
+        const totalDocuments = yield Qa_1.default.countDocuments(filter);
+        const qaSet = yield Qa_1.default.find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        return (0, response_1.sendPaginated)(req, res, {
             message: `Hola, ${user === null || user === void 0 ? void 0 : user.name}, here is your saved QA set for this tool 🤩`,
-            qa: qaSet,
+            documents: qaSet,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (err) {
@@ -68,10 +74,7 @@ const updateQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         const updatedQa = yield Qa_1.default.findByIdAndUpdate({ _id: qaId }, req.body, {
             new: true,
         });
-        res.status(200).json({
-            message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have updated this QA`,
-            qa: updatedQa,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have updated this QA`, { qa: updatedQa });
     }
     catch (err) {
         next(err);
@@ -83,9 +86,7 @@ const deleteQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         const { qaId, userId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         yield Qa_1.default.findByIdAndDelete({ _id: qaId });
-        res.status(200).json({
-            message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have deleted this QA`,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have deleted this QA`);
     }
     catch (err) {
         next(err);

@@ -13,6 +13,7 @@ import todoRoute from "./routes/todo";
 import adminRoute from "./routes/admin";
 import { connect } from "./dbConnection/db";
 import User from "./models/User";
+import { sendError } from "./helpers/response";
 
 dotenv.config();
 
@@ -33,14 +34,12 @@ app.use("/api/admin", adminRoute);
 app.use((error: any, req: Request, res: Response, next: Function) => {
 	const errStatus = error.status || 500;
 	const errMessage = error.message || "Something went wrong";
-	return res.status(errStatus).json({
-		message: errMessage,
-		success: false,
+	return sendError(req, res, errStatus, errMessage, {
 		stack: error.stack,
 	});
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 
 app.listen(port, () => {
 	connect();

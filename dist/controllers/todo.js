@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteTodo = exports.updateTodo = exports.getTodoWithUserId = exports.createTodo = void 0;
 const Todo_1 = __importDefault(require("../models/Todo"));
 const User_1 = __importDefault(require("../models/User"));
+const response_1 = require("../helpers/response");
 const createTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { title, description, urgency, deadline, userId } = req.body;
@@ -27,10 +28,7 @@ const createTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             userId,
         });
         yield newTodo.save();
-        res.status(201).json({
-            message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have created a new todo ${newTodo.title} 🤩`,
-            todo: newTodo,
-        });
+        return (0, response_1.sendSuccess)(req, res, 201, `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have created a new todo ${newTodo.title} 🤩`, { todo: newTodo });
     }
     catch (err) {
         next(err);
@@ -41,10 +39,19 @@ const getTodoWithUserId = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     try {
         const { userId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
-        const todoList = yield Todo_1.default.find({ userId });
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const totalDocuments = yield Todo_1.default.countDocuments({ userId });
+        const todoList = yield Todo_1.default.find({ userId })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        return (0, response_1.sendPaginated)(req, res, {
             message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, here is your todo list 🤩`,
-            todoList: todoList,
+            documents: todoList,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (err) {
@@ -64,10 +71,7 @@ const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             deadline,
             userId,
         }, { new: true });
-        res.status(200).json({
-            message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have updated the todo ${updatedTodo === null || updatedTodo === void 0 ? void 0 : updatedTodo.title} successfully 🤩`,
-            todo: updatedTodo,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have updated the todo ${updatedTodo === null || updatedTodo === void 0 ? void 0 : updatedTodo.title} successfully 🤩`, { todo: updatedTodo });
     }
     catch (err) {
         next(err);
@@ -79,9 +83,7 @@ const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { todoId } = req.params;
         const user = yield User_1.default.findOne({ _id: req.params.userId });
         yield Todo_1.default.findByIdAndDelete(todoId);
-        res.status(200).json({
-            message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have deleted the todo successfully 🤩`,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have deleted the todo successfully 🤩`);
     }
     catch (err) {
         next(err);

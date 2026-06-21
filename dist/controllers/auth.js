@@ -18,14 +18,13 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const registerEmail_1 = require("../helpers/registerEmail");
 const sendLoginEmail_1 = require("../helpers/sendLoginEmail");
+const response_1 = require("../helpers/response");
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password, phone, profilePicture, bio, isAdmin } = req.body;
         const existingUser = yield User_1.default.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({
-                message: `${email} is already used ! Please try some other email... 🚫`,
-            });
+            return (0, response_1.sendError)(req, res, 400, `${email} is already used ! Please try some other email... 🚫`);
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
         const hashedPassword = bcryptjs_1.default.hashSync(password, saltRounds);
@@ -40,9 +39,7 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         });
         yield newUser.save();
         (0, registerEmail_1.sendRegistrationEmail)(email, name);
-        res.status(201).json({
-            message: `Congratulations ${name}!! You have registered successfully 🤩`,
-        });
+        return (0, response_1.sendSuccess)(req, res, 201, `Congratulations ${name}!! You have registered successfully 🤩`);
     }
     catch (error) {
         next(error);
@@ -59,13 +56,11 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
         // console.log(OrPhone, password);
         const existingUser = yield User_1.default.findOne(query);
         if (!existingUser) {
-            return res
-                .status(400)
-                .json({ message: "No User with this email or Phone...❌" });
+            return (0, response_1.sendError)(req, res, 400, "No User with this email or Phone...❌");
         }
         const passwordMatches = yield bcryptjs_1.default.compare(password, existingUser.password);
         if (!passwordMatches) {
-            return res.status(504).json({ message: "Wrong Password !" });
+            return (0, response_1.sendError)(req, res, 504, "Wrong Password !");
         }
         const userWithoutPassword = yield User_1.default.findOne(query).select("-password");
         const token = jsonwebtoken_1.default.sign({
@@ -73,8 +68,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             isAdmin: existingUser.isAdmin,
         }, process.env.SECRET_TOKEN);
         (0, sendLoginEmail_1.sendLoginEmail)(existingUser.email, existingUser.name);
-        res.status(200).json({
-            message: "Login Success ✅",
+        return (0, response_1.sendSuccess)(req, res, 200, "Login Success ✅", {
             token: token,
             user: userWithoutPassword,
         });
@@ -86,10 +80,19 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
 exports.login = login;
 const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield User_1.default.find({});
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const totalDocuments = yield User_1.default.countDocuments({});
+        const users = yield User_1.default.find({})
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        return (0, response_1.sendPaginated)(req, res, {
             message: "Users fetched successfully ✅",
-            users: users,
+            documents: users,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (error) {
@@ -102,14 +105,9 @@ const getUserWithId = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            return (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
         }
-        res.status(200).json({
-            message: `${user === null || user === void 0 ? void 0 : user.name} has been fetched successfully 🤩`,
-            user: user,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `${user === null || user === void 0 ? void 0 : user.name} has been fetched successfully 🤩`, { user });
     }
     catch (error) {
         next(error);
@@ -122,9 +120,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { name, email, phone, profilePicture, bio } = req.body;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            return (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
         }
         const updatedUser = yield User_1.default.findByIdAndUpdate({ _id: userId }, {
             name,
@@ -136,10 +132,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const updatedUserWithoutPassword = yield User_1.default.findOne({
             _id: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser._id,
         }).select("-password");
-        res.status(200).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated successfully 🤩`,
-            user: updatedUserWithoutPassword,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated successfully 🤩`, { user: updatedUserWithoutPassword });
     }
     catch (error) {
         next(error);
@@ -152,24 +145,18 @@ const updatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const { oldPassword, newPassword } = req.body;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            return (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
         }
         const isPasswordCorrect = bcryptjs_1.default.compareSync(oldPassword, user.password);
         if (!isPasswordCorrect) {
-            return res.status(400).json({
-                message: `Incorrect old password! Please try again... 😒`,
-            });
+            return (0, response_1.sendError)(req, res, 400, `Incorrect old password! Please try again... 😒`);
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
         const hashedPassword = bcryptjs_1.default.hashSync(newPassword, saltRounds);
         yield User_1.default.findByIdAndUpdate({ _id: userId }, {
             password: hashedPassword,
         });
-        res.status(200).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated your password successfully 🤩`,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated your password successfully 🤩`);
     }
     catch (err) {
         next(err);
@@ -181,14 +168,10 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            return res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            return (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
         }
         yield User_1.default.findByIdAndDelete({ _id: userId });
-        res.status(200).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name}'s account is deleted successfully 🤩`,
-        });
+        return (0, response_1.sendSuccess)(req, res, 200, `Hola, ${user === null || user === void 0 ? void 0 : user.name}'s account is deleted successfully 🤩`);
     }
     catch (error) {
         next(error);

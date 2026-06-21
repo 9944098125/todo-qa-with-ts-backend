@@ -4,6 +4,13 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { sendRegistrationEmail } from "../helpers/registerEmail";
 import { sendLoginEmail } from "../helpers/sendLoginEmail";
+import {
+	getPagination,
+	sendError,
+	sendPaginated,
+	sendSuccess,
+	totalPages,
+} from "../helpers/response";
 
 export const register = async (
 	req: Request,
@@ -15,9 +22,12 @@ export const register = async (
 			req.body;
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
-			return res.status(400).json({
-				message: `${email} is already used ! Please try some other email... 🚫`,
-			});
+			return sendError(
+				req,
+				res,
+				400,
+				`${email} is already used ! Please try some other email... 🚫`
+			);
 		}
 		const saltRounds = bcryptJS.genSaltSync(12);
 		const hashedPassword = bcryptJS.hashSync(password, saltRounds);
@@ -32,9 +42,12 @@ export const register = async (
 		});
 		await newUser.save();
 		sendRegistrationEmail(email, name);
-		res.status(201).json({
-			message: `Congratulations ${name}!! You have registered successfully 🤩`,
-		});
+		return sendSuccess(
+			req,
+			res,
+			201,
+			`Congratulations ${name}!! You have registered successfully 🤩`
+		);
 	} catch (error) {
 		next(error);
 	}
@@ -55,16 +68,19 @@ export const login = async (
 		// console.log(OrPhone, password);
 		const existingUser = await User.findOne(query);
 		if (!existingUser) {
-			return res
-				.status(400)
-				.json({ message: "No User with this email or Phone...❌" });
+			return sendError(
+				req,
+				res,
+				400,
+				"No User with this email or Phone...❌"
+			);
 		}
 		const passwordMatches = await bcryptJS.compare(
 			password,
 			existingUser.password
 		);
 		if (!passwordMatches) {
-			return res.status(504).json({ message: "Wrong Password !" });
+			return sendError(req, res, 504, "Wrong Password !");
 		}
 		const userWithoutPassword = await User.findOne(query).select("-password");
 		const token = jwt.sign(
@@ -75,8 +91,7 @@ export const login = async (
 			process.env.SECRET_TOKEN!
 		);
 		sendLoginEmail(existingUser.email, existingUser.name);
-		res.status(200).json({
-			message: "Login Success ✅",
+		return sendSuccess(req, res, 200, "Login Success ✅", {
 			token: token,
 			user: userWithoutPassword,
 		});
@@ -91,10 +106,19 @@ export const getAllUsers = async (
 	next: NextFunction
 ) => {
 	try {
-		const users = await User.find({});
-		res.status(200).json({
+		const { page, limit, skip } = getPagination(req, 10);
+		const totalDocuments = await User.countDocuments({});
+		const users = await User.find({})
+			.sort({ createdAt: -1 })
+			.skip(skip)
+			.limit(limit);
+		return sendPaginated(req, res, {
 			message: "Users fetched successfully ✅",
-			users: users,
+			documents: users,
+			pageNumber: page,
+			pageSize: limit,
+			totalPages: totalPages(totalDocuments, limit),
+			totalDocuments,
 		});
 	} catch (error: any) {
 		next(error);
@@ -110,14 +134,20 @@ export const getUserWithId = async (
 		const { userId } = req.params;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
-				message: `User with id ${userId} does not exist 🚫`,
-			});
+			return sendError(
+				req,
+				res,
+				404,
+				`User with id ${userId} does not exist 🚫`
+			);
 		}
-		res.status(200).json({
-			message: `${user?.name} has been fetched successfully 🤩`,
-			user: user,
-		});
+		return sendSuccess(
+			req,
+			res,
+			200,
+			`${user?.name} has been fetched successfully 🤩`,
+			{ user }
+		);
 	} catch (error) {
 		next(error);
 	}
@@ -133,9 +163,12 @@ export const updateUser = async (
 		const { name, email, phone, profilePicture, bio } = req.body;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
-				message: `User with id ${userId} does not exist 🚫`,
-			});
+			return sendError(
+				req,
+				res,
+				404,
+				`User with id ${userId} does not exist 🚫`
+			);
 		}
 		const updatedUser = await User.findByIdAndUpdate(
 			{ _id: userId },
@@ -151,10 +184,13 @@ export const updateUser = async (
 		const updatedUserWithoutPassword = await User.findOne({
 			_id: updatedUser?._id,
 		}).select("-password");
-		res.status(200).json({
-			message: `Hola, ${user?.name} updated successfully 🤩`,
-			user: updatedUserWithoutPassword,
-		});
+		return sendSuccess(
+			req,
+			res,
+			200,
+			`Hola, ${user?.name} updated successfully 🤩`,
+			{ user: updatedUserWithoutPassword }
+		);
 	} catch (error) {
 		next(error);
 	}
@@ -170,15 +206,21 @@ export const updatePassword = async (
 		const { oldPassword, newPassword } = req.body;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
-				message: `User with id ${userId} does not exist 🚫`,
-			});
+			return sendError(
+				req,
+				res,
+				404,
+				`User with id ${userId} does not exist 🚫`
+			);
 		}
 		const isPasswordCorrect = bcryptJS.compareSync(oldPassword, user.password);
 		if (!isPasswordCorrect) {
-			return res.status(400).json({
-				message: `Incorrect old password! Please try again... 😒`,
-			});
+			return sendError(
+				req,
+				res,
+				400,
+				`Incorrect old password! Please try again... 😒`
+			);
 		}
 		const saltRounds = bcryptJS.genSaltSync(12);
 		const hashedPassword = bcryptJS.hashSync(newPassword, saltRounds);
@@ -188,9 +230,12 @@ export const updatePassword = async (
 				password: hashedPassword,
 			}
 		);
-		res.status(200).json({
-			message: `Hola, ${user?.name} updated your password successfully 🤩`,
-		});
+		return sendSuccess(
+			req,
+			res,
+			200,
+			`Hola, ${user?.name} updated your password successfully 🤩`
+		);
 	} catch (err: any) {
 		next(err);
 	}
@@ -205,14 +250,20 @@ export const deleteUser = async (
 		const { userId } = req.params;
 		const user = await User.findById({ _id: userId });
 		if (!user) {
-			return res.status(404).json({
-				message: `User with id ${userId} does not exist 🚫`,
-			});
+			return sendError(
+				req,
+				res,
+				404,
+				`User with id ${userId} does not exist 🚫`
+			);
 		}
 		await User.findByIdAndDelete({ _id: userId });
-		res.status(200).json({
-			message: `Hola, ${user?.name}'s account is deleted successfully 🤩`,
-		});
+		return sendSuccess(
+			req,
+			res,
+			200,
+			`Hola, ${user?.name}'s account is deleted successfully 🤩`
+		);
 	} catch (error) {
 		next(error);
 	}

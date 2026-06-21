@@ -1,6 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import Todo from "../models/Todo";
 import User from "../models/User";
+import {
+	getPagination,
+	sendPaginated,
+	sendSuccess,
+	totalPages,
+} from "../helpers/response";
 
 export const createTodo = async (
 	req: Request,
@@ -18,10 +24,13 @@ export const createTodo = async (
 			userId,
 		});
 		await newTodo.save();
-		res.status(201).json({
-			message: `Hola ${user?.name}, you have created a new todo ${newTodo.title} 🤩`,
-			todo: newTodo,
-		});
+		return sendSuccess(
+			req,
+			res,
+			201,
+			`Hola ${user?.name}, you have created a new todo ${newTodo.title} 🤩`,
+			{ todo: newTodo }
+		);
 	} catch (err: any) {
 		next(err);
 	}
@@ -35,10 +44,19 @@ export const getTodoWithUserId = async (
 	try {
 		const { userId } = req.params;
 		const user = await User.findOne({ _id: userId });
-		const todoList = await Todo.find({ userId });
-		res.status(200).json({
+		const { page, limit, skip } = getPagination(req, 10);
+		const totalDocuments = await Todo.countDocuments({ userId });
+		const todoList = await Todo.find({ userId })
+			.sort({ createdAt: -1 })
+			.skip(skip)
+			.limit(limit);
+		return sendPaginated(req, res, {
 			message: `Hola ${user?.name}, here is your todo list 🤩`,
-			todoList: todoList,
+			documents: todoList,
+			pageNumber: page,
+			pageSize: limit,
+			totalPages: totalPages(totalDocuments, limit),
+			totalDocuments,
 		});
 	} catch (err: any) {
 		next(err);
@@ -65,10 +83,13 @@ export const updateTodo = async (
 			},
 			{ new: true }
 		);
-		res.status(200).json({
-			message: `Hola ${user?.name}, you have updated the todo ${updatedTodo?.title} successfully 🤩`,
-			todo: updatedTodo,
-		});
+		return sendSuccess(
+			req,
+			res,
+			200,
+			`Hola ${user?.name}, you have updated the todo ${updatedTodo?.title} successfully 🤩`,
+			{ todo: updatedTodo }
+		);
 	} catch (err: any) {
 		next(err);
 	}
@@ -83,9 +104,12 @@ export const deleteTodo = async (
 		const { todoId } = req.params;
 		const user = await User.findOne({ _id: req.params.userId });
 		await Todo.findByIdAndDelete(todoId);
-		res.status(200).json({
-			message: `Hola ${user?.name}, you have deleted the todo successfully 🤩`,
-		});
+		return sendSuccess(
+			req,
+			res,
+			200,
+			`Hola ${user?.name}, you have deleted the todo successfully 🤩`
+		);
 	} catch (err: any) {
 		next(err);
 	}
