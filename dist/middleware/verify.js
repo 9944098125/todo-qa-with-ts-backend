@@ -116,8 +116,6 @@ const verifyTodoOwner = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
 });
 exports.verifyTodoOwner = verifyTodoOwner;
 const verifyToken = (req, res, next) => {
-    console.log("Authorization Header:", req.headers.authorization);
-    console.log("Cookies:", req.cookies["connect-side"]);
     const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
     if (!token) {
         res.status(403).json({ message: "No token provided" });
@@ -128,7 +126,6 @@ const verifyToken = (req, res, next) => {
             res.status(401).json({ message: "Unauthorized! Invalid token", err });
             return;
         }
-        console.log("decoded", decoded);
         req.user = decoded;
         next();
     });

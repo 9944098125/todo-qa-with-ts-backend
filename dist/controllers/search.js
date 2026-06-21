@@ -16,11 +16,13 @@ exports.searchItems = void 0;
 const Qa_1 = __importDefault(require("../models/Qa"));
 const User_1 = __importDefault(require("../models/User"));
 const Todo_1 = __importDefault(require("../models/Todo"));
+const response_1 = require("../helpers/response");
 const searchItems = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { type, query } = req.query;
         if (!type || !query) {
-            return res.status(400).json({ message: "Search Content is required" });
+            (0, response_1.sendError)(req, res, 400, "Search Content is required");
+            return;
         }
         let results = [];
         // Handle search by type
@@ -41,9 +43,12 @@ const searchItems = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                 });
                 break;
             default:
-                return res.status(400).json({ message: "Invalid search type" });
+                (0, response_1.sendError)(req, res, 400, "Invalid search type");
+                return;
         }
-        res.status(200).json({ results });
+        (0, response_1.sendSuccess)(req, res, 200, "Search results fetched successfully", {
+            results,
+        });
     }
     catch (error) {
         next(error);

@@ -17,6 +17,7 @@ const User_1 = __importDefault(require("../models/User"));
 const Qa_1 = __importDefault(require("../models/Qa"));
 const Todo_1 = __importDefault(require("../models/Todo"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const response_1 = require("../helpers/response");
 const userCreatedByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password, phone, profilePicture, bio, isAdmin } = req.body;
@@ -24,9 +25,7 @@ const userCreatedByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const admin = yield User_1.default.findOne({ _id: adminId });
         const invalidUser = yield User_1.default.findOne({ email });
         if (invalidUser) {
-            res.status(403).json({
-                message: `Already a user exists with this email ${email}, try some other email address ❌`,
-            });
+            (0, response_1.sendError)(req, res, 403, `Already a user exists with this email ${email}, try some other email address ❌`);
             return;
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
@@ -41,10 +40,7 @@ const userCreatedByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0,
             isAdmin,
         });
         yield newUser.save();
-        res.status(201).json({
-            message: `Hola ${admin.name}, you have successfully create a new user ${name}`,
-            user: newUser,
-        });
+        (0, response_1.sendSuccess)(req, res, 201, `Hola ${admin.name}, you have successfully create a new user ${name}`, { user: newUser });
     }
     catch (err) {
         next(err);
@@ -53,10 +49,19 @@ const userCreatedByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0,
 exports.userCreatedByAdmin = userCreatedByAdmin;
 const getAllUsersList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield User_1.default.find();
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const totalDocuments = yield User_1.default.countDocuments();
+        const users = yield User_1.default.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        (0, response_1.sendPaginated)(req, res, {
             message: "Fetched all the users list...",
-            users: users,
+            documents: users,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (err) {
@@ -69,15 +74,10 @@ const getAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         const { userId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         if (!user) {
-            res.status(403).json({
-                message: "No User with this ID",
-            });
+            (0, response_1.sendError)(req, res, 403, "No User with this ID");
             return;
         }
-        res.status(200).json({
-            user: user,
-            message: `Fetched ${user.name} details successfully !`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Fetched ${user.name} details successfully !`, { user });
     }
     catch (err) {
         next(err);
@@ -89,23 +89,16 @@ const updatedUserByAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0,
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
             return;
         }
         if (user.isAdmin) {
-            res.status(403).json({
-                message: `This user ${user.name} is also an admin, so you can't make changes to this user 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 403, `This user ${user.name} is also an admin, so you can't make changes to this user 🚫`);
             return;
         }
         const updatedUser = yield User_1.default.findByIdAndUpdate(userId, { $set: req.body }, { new: true, runValidators: true });
         yield updatedUser.save();
-        res.status(200).json({
-            message: `Hola, ${user.name}, you have updated your profile successfully 🤩`,
-            user: updatedUser,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${user.name}, you have updated your profile successfully 🤩`, { user: updatedUser });
     }
     catch (err) {
         next(err);
@@ -118,22 +111,15 @@ const deleteAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         const user = yield User_1.default.findById({ _id: userId });
         const admin = yield User_1.default.findOne({ _id: adminId });
         if (!user) {
-            res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
             return;
         }
         if (user.isAdmin) {
-            res.status(403).json({
-                message: `This user ${user.name} is also an admin, so you can't delete this user 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 403, `This user ${user.name} is also an admin, so you can't delete this user 🚫`);
             return;
         }
         yield User_1.default.deleteOne({ _id: userId });
-        res.status(200).json({
-            message: `Hola, ${admin.name}, you have deleted ${user.name}'s profile successfully 🤩`,
-            user: user,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${admin.name}, you have deleted ${user.name}'s profile successfully 🤩`, { user });
     }
     catch (err) {
         next(err);
@@ -154,11 +140,7 @@ const createQaForAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, f
             userId,
         });
         yield newQa.save();
-        // console.log(newQa);
-        res.status(201).json({
-            message: `Hola, ${admin.name}, you have created a new QA for ${user.name} successfully 🤩`,
-            qa: newQa,
-        });
+        (0, response_1.sendSuccess)(req, res, 201, `Hola, ${admin.name}, you have created a new QA for ${user.name} successfully 🤩`, { qa: newQa });
     }
     catch (err) {
         next(err);
@@ -167,12 +149,21 @@ const createQaForAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, f
 exports.createQaForAUser = createQaForAUser;
 const getQaOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId, toolId } = req.params;
+        const { userId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
-        const qaListOfAUser = yield Qa_1.default.find({ userId, toolId });
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const totalDocuments = yield Qa_1.default.countDocuments({ userId });
+        const qaListOfAUser = yield Qa_1.default.find({ userId })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        (0, response_1.sendPaginated)(req, res, {
             message: `Hola, ${user.name}, you have fetched all the QAs of ${user.name} successfully 🤩`,
-            qas: qaListOfAUser,
+            documents: qaListOfAUser,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (err) {
@@ -186,15 +177,13 @@ const updateQaOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const { userId, qaId, adminId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         const admin = yield User_1.default.findOne({ _id: adminId });
-        yield Qa_1.default.findByIdAndUpdate({ _id: qaId }, {
+        const updatedQa = yield Qa_1.default.findByIdAndUpdate({ _id: qaId }, {
             question,
             answer,
             importance,
             toolId,
         }, { new: true });
-        res.status(200).json({
-            message: `Hola, ${admin.name}, you have updated the QA of ${user.name} successfully 🤩`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${admin.name}, you have updated the QA of ${user.name} successfully 🤩`, { qa: updatedQa });
     }
     catch (err) {
         next(err);
@@ -208,15 +197,11 @@ const deleteQaOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fu
         const admin = yield User_1.default.findOne({ _id: adminId });
         const qa = yield Qa_1.default.findOne({ _id: qaId });
         if (!qa) {
-            res.status(403).json({
-                message: `This QA does not exist🚫`,
-            });
+            (0, response_1.sendError)(req, res, 403, `This QA does not exist🚫`);
             return;
         }
         yield Qa_1.default.findByIdAndDelete({ _id: qaId });
-        res.status(200).json({
-            message: `Hola, ${admin.name}, you have deleted the QA of ${user.name} successfully 🤩`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${admin.name}, you have deleted the QA of ${user.name} successfully 🤩`);
     }
     catch (err) {
         next(err);
@@ -237,10 +222,7 @@ const createTodoForAUser = (req, res, next) => __awaiter(void 0, void 0, void 0,
             userId,
         });
         yield newTodo.save();
-        res.status(201).json({
-            message: `Hola, ${admin.name}, you have created a new Todo for ${user.name} successfully 🤩`,
-            todo: newTodo,
-        });
+        (0, response_1.sendSuccess)(req, res, 201, `Hola, ${admin.name}, you have created a new Todo for ${user.name} successfully 🤩`, { todo: newTodo });
     }
     catch (err) {
         next(err);
@@ -252,10 +234,19 @@ const getTodoOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const { userId, adminId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         const admin = yield User_1.default.findOne({ _id: adminId });
-        const todoListOfAUser = yield Todo_1.default.find({ userId: userId });
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const totalDocuments = yield Todo_1.default.countDocuments({ userId });
+        const todoListOfAUser = yield Todo_1.default.find({ userId })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        (0, response_1.sendPaginated)(req, res, {
             message: `Hola, ${admin.name}, you have fetched the todo list of ${user.name} successfully 🤩`,
-            todoList: todoListOfAUser,
+            documents: todoListOfAUser,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (err) {
@@ -269,16 +260,14 @@ const updateTodoOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const { userId, todoId, adminId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         const admin = yield User_1.default.findOne({ _id: adminId });
-        yield Todo_1.default.findByIdAndUpdate({ _id: todoId }, {
+        const updatedTodo = yield Todo_1.default.findByIdAndUpdate({ _id: todoId }, {
             title,
             description,
             urgency,
             deadline,
             userId,
         }, { new: true });
-        res.status(200).json({
-            message: `Hola, ${admin.name}, you have updated the todo of ${user.name} successfully 🤩`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${admin.name}, you have updated the todo of ${user.name} successfully 🤩`, { todo: updatedTodo });
     }
     catch (err) {
         next(err);
@@ -291,9 +280,7 @@ const deleteTodoOfAUser = (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const user = yield User_1.default.findOne({ _id: userId });
         const admin = yield User_1.default.findOne({ _id: adminId });
         yield Todo_1.default.findByIdAndDelete({ _id: todoId });
-        res.status(200).json({
-            message: `Hola, ${admin.name}, you have deleted the todo of ${user.name} successfully 🤩`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${admin.name}, you have deleted the todo of ${user.name} successfully 🤩`);
     }
     catch (err) {
         next(err);

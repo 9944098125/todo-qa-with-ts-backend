@@ -11,6 +11,7 @@ import todoRoute from "./routes/todo";
 import adminRoute from "./routes/admin";
 import { connect } from "./dbConnection/db";
 import searchRoute from "./routes/search";
+import { sendError } from "./helpers/response";
 
 dotenv.config();
 
@@ -47,15 +48,13 @@ app.use("/api", searchRoute);
 app.use((error: any, req: Request, res: Response, next: Function): void => {
 	const errStatus = error.status || 500;
 	const errMessage = error.message || "Something went wrong";
-	res.status(errStatus).json({
-		message: errMessage,
-		success: false,
+	sendError(req, res, errStatus, errMessage, {
 		stack: error.stack,
 	});
 	return;
 });
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001
 
 app.listen(port, () => {
 	connect();

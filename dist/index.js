@@ -15,13 +15,10 @@ const todo_1 = __importDefault(require("./routes/todo"));
 const admin_1 = __importDefault(require("./routes/admin"));
 const db_1 = require("./dbConnection/db");
 const search_1 = __importDefault(require("./routes/search"));
+const response_1 = require("./helpers/response");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)({
-    origin: "https://todo-qa-frontend.vercel.app",
-    methods: "GET,POST,PATCH,PUT,DELETE",
-    credentials: true,
-}));
+app.use((0, cors_1.default)());
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 app.use(body_parser_1.default.json());
@@ -47,17 +44,16 @@ app.use("/api", search_1.default);
 app.use((error, req, res, next) => {
     const errStatus = error.status || 500;
     const errMessage = error.message || "Something went wrong";
-    res.status(errStatus).json({
-        message: errMessage,
-        success: false,
+    (0, response_1.sendError)(req, res, errStatus, errMessage, {
         stack: error.stack,
     });
     return;
 });
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 app.listen(port, () => {
     (0, db_1.connect)();
     console.log(`Server is running on ${port}`);
 });
+// small change
 // command to get secret token
 // require('crypto').randomBytes(64).toString('hex')

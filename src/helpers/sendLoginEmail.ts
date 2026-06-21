@@ -1,7 +1,6 @@
 import nodemailer, {
 	Transporter,
 	SendMailOptions,
-	SentMessageInfo,
 } from "nodemailer";
 
 export async function sendLoginEmail(
@@ -29,8 +28,7 @@ export async function sendLoginEmail(
 		};
 
 		// Send the email
-		const info: SentMessageInfo = await transporter.sendMail(mailOptions);
-		// console.log("Email sent:", info.messageId);
+		await transporter.sendMail(mailOptions);
 	} catch (error) {
 		console.error("Error sending email:", error);
 	}

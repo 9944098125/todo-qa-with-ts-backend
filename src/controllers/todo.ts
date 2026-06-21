@@ -3,7 +3,13 @@ import Todo from "../models/Todo";
 import User from "../models/User";
 import OpenAI from "openai";
 import dotenv from "dotenv";
-import { v4 as uuidv4 } from "uuid";
+import {
+	getPagination,
+	sendError,
+	sendPaginated,
+	sendSuccess,
+	totalPages,
+} from "../helpers/response";
 
 dotenv.config();
 const openai = new OpenAI({
@@ -32,10 +38,13 @@ export const createTodo = async (
 			userId,
 		});
 		await newTodo.save();
-		res.status(201).json({
-			message: `Hola ${user?.name}, you have created a new todo ${newTodo.title} 🤩`,
-			todo: newTodo,
-		});
+		sendSuccess(
+			req,
+			res,
+			201,
+			`Hola ${user?.name}, you have created a new todo ${newTodo.title} 🤩`,
+			{ todo: newTodo }
+		);
 	} catch (err: any) {
 		next(err);
 	}
@@ -48,42 +57,20 @@ export const getTodoWithUserId = async (
 ): Promise<void> => {
 	try {
 		const { userId } = req.params;
-		const page = parseInt(req.query.page as string) || 1;
-		const pageSize = parseInt(req.query.pageSize as string) || 20;
-		const skip = (page - 1) * pageSize;
-
 		const user = await User.findOne({ _id: userId });
-		
-		// Get total count for pagination
+		const { page, limit, skip } = getPagination(req, 10);
 		const totalDocuments = await Todo.countDocuments({ userId });
-		const totalPages = Math.ceil(totalDocuments / pageSize);
-		
-		// Get paginated todo list
 		const todoList = await Todo.find({ userId })
+			.sort({ createdAt: -1 })
 			.skip(skip)
-			.limit(pageSize)
-			.sort({ createdAt: -1 });
-
-		// Generate request ID
-		const requestId = uuidv4();
-		
-		// Construct URL for meta
-		const baseUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-
-		res.status(200).json({
-			status: 200,
-			statusText: "OK",
-			data: {
-				pageNumber: page.toString(),
-				pageSize: pageSize,
-				totalPages: totalPages,
-				totalDocuments: totalDocuments,
-				documents: todoList
-			},
-			meta: {
-				requestId: requestId,
-				url: baseUrl
-			}
+			.limit(limit);
+		sendPaginated(req, res, {
+			message: `Hola ${user?.name}, here is your todo list 🤩`,
+			documents: todoList,
+			pageNumber: page,
+			pageSize: limit,
+			totalPages: totalPages(totalDocuments, limit),
+			totalDocuments,
 		});
 	} catch (err: any) {
 		next(err);
@@ -110,10 +97,13 @@ export const updateTodo = async (
 			},
 			{ new: true }
 		);
-		res.status(200).json({
-			message: `Hola ${user?.name}, you have updated the todo ${updatedTodo?.title} successfully 🤩`,
-			todo: updatedTodo,
-		});
+		sendSuccess(
+			req,
+			res,
+			200,
+			`Hola ${user?.name}, you have updated the todo ${updatedTodo?.title} successfully 🤩`,
+			{ todo: updatedTodo }
+		);
 	} catch (err: any) {
 		next(err);
 	}
@@ -128,9 +118,12 @@ export const deleteTodo = async (
 		const { todoId } = req.params;
 		const user = await User.findOne({ _id: req.params.userId });
 		await Todo.findByIdAndDelete(todoId);
-		res.status(200).json({
-			message: `Hola ${user?.name}, you have deleted the todo successfully 🤩`,
-		});
+		sendSuccess(
+			req,
+			res,
+			200,
+			`Hola ${user?.name}, you have deleted the todo successfully 🤩`
+		);
 	} catch (err: any) {
 		next(err);
 	}
@@ -145,7 +138,7 @@ export const generateTodoDescription = async (
     const { todoTitle } = req.body;
 
     if (!todoTitle) {
-      res.status(400).json({ error: "Todo title is required" });
+      sendError(req, res, 400, "Todo title is required");
       return;
     }
 
@@ -170,14 +163,12 @@ export const generateTodoDescription = async (
       completion.choices?.[0]?.message?.content?.trim();
 
     if (!generatedTodoDescription) {
-      res.status(500).json({
-        error: "AI failed to generate todo description"
-      });
+      sendError(req, res, 500, "AI failed to generate todo description");
       return;
     }
 
-    res.status(200).json({
-      generatedTodoDescription
+    sendSuccess(req, res, 200, "Todo description generated successfully", {
+      generatedTodoDescription,
     });
   } catch (error) {
     next(error);

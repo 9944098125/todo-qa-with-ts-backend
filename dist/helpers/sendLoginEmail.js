@@ -35,8 +35,7 @@ function sendLoginEmail(email, name) {
       `,
             };
             // Send the email
-            const info = yield transporter.sendMail(mailOptions);
-            // console.log("Email sent:", info.messageId);
+            yield transporter.sendMail(mailOptions);
         }
         catch (error) {
             console.error("Error sending email:", error);

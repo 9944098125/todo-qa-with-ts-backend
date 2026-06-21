@@ -17,10 +17,16 @@ const Qa_1 = __importDefault(require("../models/Qa"));
 const User_1 = __importDefault(require("../models/User"));
 const openai_1 = __importDefault(require("openai"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const response_1 = require("../helpers/response");
 dotenv_1.default.config();
 // Create a configuration with your OpenAI API key
-const openAI = new openai_1.default({
+const openai = new openai_1.default({
     apiKey: process.env.OPEN_AI_API_KEY,
+    baseURL: "https://openrouter.ai/api/v1",
+    defaultHeaders: {
+        "HTTP-Referer": "http://localhost", // REQUIRED
+        "X-Title": "My MERN App" // REQUIRED
+    }
 });
 const createQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -35,12 +41,9 @@ const createQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         });
         yield newQa.save();
         const questionString = question.split(" ");
-        res.status(201).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name}, now you question ${questionString
-                .slice(0, 3)
-                .join(" ")}... has been saved to your database 🤩`,
-            qa: newQa,
-        });
+        (0, response_1.sendSuccess)(req, res, 201, `Hola, ${user === null || user === void 0 ? void 0 : user.name}, now you question ${questionString
+            .slice(0, 3)
+            .join(" ")}... has been saved to your database 🤩`, { qa: newQa });
     }
     catch (err) {
         next(err);
@@ -51,10 +54,20 @@ const getQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { userId, toolId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
-        const qaSet = yield Qa_1.default.find({ userId, toolId });
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const filter = { userId, toolId };
+        const totalDocuments = yield Qa_1.default.countDocuments(filter);
+        const qaSet = yield Qa_1.default.find(filter)
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        (0, response_1.sendPaginated)(req, res, {
             message: `Hola, ${user === null || user === void 0 ? void 0 : user.name}, here is your saved QA set for this tool 🤩`,
-            qa: qaSet,
+            documents: qaSet,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (err) {
@@ -69,10 +82,7 @@ const updateQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         const updatedQa = yield Qa_1.default.findByIdAndUpdate({ _id: qaId }, req.body, {
             new: true,
         });
-        res.status(200).json({
-            message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have updated this QA`,
-            qa: updatedQa,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have updated this QA`, { qa: updatedQa });
     }
     catch (err) {
         next(err);
@@ -84,9 +94,7 @@ const deleteQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         const { qaId, userId } = req.params;
         const user = yield User_1.default.findOne({ _id: userId });
         yield Qa_1.default.findByIdAndDelete({ _id: qaId });
-        res.status(200).json({
-            message: `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have deleted this QA`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola ${user === null || user === void 0 ? void 0 : user.name}, you have deleted this QA`);
     }
     catch (err) {
         next(err);
@@ -94,29 +102,36 @@ const deleteQa = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.deleteQa = deleteQa;
 const generateAnswerWithAI = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b, _c, _d;
     try {
         const { question } = req.body;
         if (!question) {
-            res.status(400).json({ error: "Question is required" });
+            (0, response_1.sendError)(req, res, 400, "Question is required");
             return;
         }
-        const completion = yield openAI.chat.completions.create({
-            model: "gpt-4",
+        const completion = yield openai.chat.completions.create({
+            model: "meta-llama/llama-3.1-8b-instruct", // safe OpenRouter model
             messages: [
                 {
                     role: "system",
-                    content: "You are an expert in answering web development questions regarding all the web technologies.",
+                    content: "You are an expert software engineer specializing in web development. Answer clearly and concisely. Return ONLY the answer text."
                 },
                 {
                     role: "user",
-                    content: question,
-                },
+                    content: question
+                }
             ],
             max_tokens: 300,
+            temperature: 0.4
         });
-        const generatedAnswer = completion.choices[0].message.content;
-        res.status(200).json({ generatedAnswer });
-        return;
+        const generatedAnswer = (_d = (_c = (_b = (_a = completion.choices) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.message) === null || _c === void 0 ? void 0 : _c.content) === null || _d === void 0 ? void 0 : _d.trim();
+        if (!generatedAnswer) {
+            (0, response_1.sendError)(req, res, 500, "AI failed to generate an answer");
+            return;
+        }
+        (0, response_1.sendSuccess)(req, res, 200, "Answer generated successfully", {
+            generatedAnswer,
+        });
     }
     catch (error) {
         next(error);

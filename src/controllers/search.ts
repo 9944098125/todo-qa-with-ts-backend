@@ -2,17 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import Qa from "../models/Qa";
 import User from "../models/User";
 import Todo from "../models/Todo";
+import { sendError, sendSuccess } from "../helpers/response";
 
 export const searchItems = async (
 	req: Request,
 	res: Response,
 	next: NextFunction
-) => {
+): Promise<void> => {
 	try {
 		const { type, query } = req.query;
 
 		if (!type || !query) {
-			return res.status(400).json({ message: "Search Content is required" });
+			sendError(req, res, 400, "Search Content is required");
+			return;
 		}
 
 		let results = [];
@@ -38,10 +40,13 @@ export const searchItems = async (
 				break;
 
 			default:
-				return res.status(400).json({ message: "Invalid search type" });
+				sendError(req, res, 400, "Invalid search type");
+				return;
 		}
 
-		res.status(200).json({ results });
+		sendSuccess(req, res, 200, "Search results fetched successfully", {
+			results,
+		});
 	} catch (error: any) {
 		next(error);
 	}

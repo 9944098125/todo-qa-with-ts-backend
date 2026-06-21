@@ -18,21 +18,24 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const registerEmail_1 = require("../helpers/registerEmail");
 const sendLoginEmail_1 = require("../helpers/sendLoginEmail");
+const response_1 = require("../helpers/response");
 const openai_1 = __importDefault(require("openai"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-// Create a configuration with your OpenAI API key
-const openAI = new openai_1.default({
+const openai = new openai_1.default({
     apiKey: process.env.OPEN_AI_API_KEY,
+    baseURL: "https://openrouter.ai/api/v1",
+    defaultHeaders: {
+        "HTTP-Referer": "http://localhost", // REQUIRED
+        "X-Title": "My MERN App" // REQUIRED
+    }
 });
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, email, password, phone, profilePicture, bio, isAdmin } = req.body;
         const existingUser = yield User_1.default.findOne({ email });
         if (existingUser) {
-            res.status(400).json({
-                message: `${email} is already used ! Please try some other email... 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 400, `${email} is already used ! Please try some other email... 🚫`);
             return;
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
@@ -48,9 +51,7 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
         });
         yield newUser.save();
         (0, registerEmail_1.sendRegistrationEmail)(email, name);
-        res.status(201).json({
-            message: `Congratulations ${name}!! You have registered successfully 🤩`,
-        });
+        (0, response_1.sendSuccess)(req, res, 201, `Congratulations ${name}!! You have registered successfully 🤩`);
     }
     catch (error) {
         next(error);
@@ -59,22 +60,18 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 exports.register = register;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { emailOrPhone, password } = req.body;
-    // console.log(req.body);
     try {
         // check if the req has email or not
         const isEmail = /^\S+@\S+\.\S+$/.test(emailOrPhone);
         const query = isEmail ? { email: emailOrPhone } : { phone: emailOrPhone };
-        // console.log(OrPhone, password);
         const existingUser = yield User_1.default.findOne(query);
         if (!existingUser) {
-            res
-                .status(400)
-                .json({ message: "No User with this email or Phone...❌" });
+            (0, response_1.sendError)(req, res, 400, "No User with this email or Phone...❌");
             return;
         }
         const passwordMatches = yield bcryptjs_1.default.compare(password, existingUser.password);
         if (!passwordMatches) {
-            res.status(504).json({ message: "Wrong Password !" });
+            (0, response_1.sendError)(req, res, 504, "Wrong Password !");
             return;
         }
         const userWithoutPassword = yield User_1.default.findOne(query).select("-password");
@@ -83,8 +80,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             isAdmin: existingUser.isAdmin,
         }, process.env.SECRET_TOKEN);
         (0, sendLoginEmail_1.sendLoginEmail)(existingUser.email, existingUser.name);
-        res.status(200).json({
-            message: "Login Success ✅",
+        (0, response_1.sendSuccess)(req, res, 200, "Login Success ✅", {
             token: token,
             user: userWithoutPassword,
         });
@@ -96,10 +92,19 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
 exports.login = login;
 const getAllUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const users = yield User_1.default.find({});
-        res.status(200).json({
+        const { page, limit, skip } = (0, response_1.getPagination)(req, 10);
+        const totalDocuments = yield User_1.default.countDocuments({});
+        const users = yield User_1.default.find({})
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+        (0, response_1.sendPaginated)(req, res, {
             message: "Users fetched successfully ✅",
-            users: users,
+            documents: users,
+            pageNumber: page,
+            pageSize: limit,
+            totalPages: (0, response_1.totalPages)(totalDocuments, limit),
+            totalDocuments,
         });
     }
     catch (error) {
@@ -110,17 +115,12 @@ exports.getAllUsers = getAllUsers;
 const getUserWithId = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { userId } = req.params;
-        const user = yield User_1.default.findOne({ _id: userId });
+        const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
             return;
         }
-        res.status(200).json({
-            message: `${user === null || user === void 0 ? void 0 : user.name} has been fetched successfully 🤩`,
-            user: user,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `${user === null || user === void 0 ? void 0 : user.name} has been fetched successfully 🤩`, { user });
     }
     catch (error) {
         next(error);
@@ -133,9 +133,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { name, email, phone, profilePicture, bio } = req.body;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
             return;
         }
         const updatedUser = yield User_1.default.findByIdAndUpdate({ _id: userId }, {
@@ -148,10 +146,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const updatedUserWithoutPassword = yield User_1.default.findOne({
             _id: updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser._id,
         }).select("-password");
-        res.status(200).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated successfully 🤩`,
-            user: updatedUserWithoutPassword,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated successfully 🤩`, { user: updatedUserWithoutPassword });
     }
     catch (error) {
         next(error);
@@ -164,16 +159,12 @@ const updatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         const { oldPassword, newPassword } = req.body;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
             return;
         }
         const isPasswordCorrect = bcryptjs_1.default.compareSync(oldPassword, user.password);
         if (!isPasswordCorrect) {
-            res.status(400).json({
-                message: `Incorrect old password! Please try again... 😒`,
-            });
+            (0, response_1.sendError)(req, res, 400, `Incorrect old password! Please try again... 😒`);
             return;
         }
         const saltRounds = bcryptjs_1.default.genSaltSync(12);
@@ -181,9 +172,7 @@ const updatePassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         yield User_1.default.findByIdAndUpdate({ _id: userId }, {
             password: hashedPassword,
         });
-        res.status(200).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated your password successfully 🤩`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${user === null || user === void 0 ? void 0 : user.name} updated your password successfully 🤩`);
     }
     catch (err) {
         next(err);
@@ -195,15 +184,11 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const { userId } = req.params;
         const user = yield User_1.default.findById({ _id: userId });
         if (!user) {
-            res.status(404).json({
-                message: `User with id ${userId} does not exist 🚫`,
-            });
+            (0, response_1.sendError)(req, res, 404, `User with id ${userId} does not exist 🚫`);
             return;
         }
         yield User_1.default.findByIdAndDelete({ _id: userId });
-        res.status(200).json({
-            message: `Hola, ${user === null || user === void 0 ? void 0 : user.name}'s account is deleted successfully 🤩`,
-        });
+        (0, response_1.sendSuccess)(req, res, 200, `Hola, ${user === null || user === void 0 ? void 0 : user.name}'s account is deleted successfully 🤩`);
     }
     catch (error) {
         next(error);
@@ -211,56 +196,45 @@ const deleteUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.deleteUser = deleteUser;
 const generateProfilePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const { gender, userId } = req.body;
-    // Validate input
-    if (!gender || (gender !== "male" && gender !== "female")) {
-        res.status(400).json({
-            error: "Please provide a valid gender (male or female).",
-        });
-        return;
-    }
-    if (!userId) {
-        res.status(400).json({
-            error: "User ID is required.",
-        });
-        return;
-    }
+    var _a, _b;
     try {
-        // Fetch user's name or other unique information
+        const { gender, userId } = req.body;
+        if (!userId) {
+            (0, response_1.sendError)(req, res, 400, "User ID is required.");
+            return;
+        }
+        if (!gender || !["male", "female"].includes(gender)) {
+            (0, response_1.sendError)(req, res, 400, "Gender must be either 'male' or 'female'.");
+            return;
+        }
         const user = yield User_1.default.findById(userId);
         if (!user) {
-            res.status(404).json({
-                error: "User not found.",
-            });
+            (0, response_1.sendError)(req, res, 404, "User not found.");
             return;
         }
-        // Create a unique prompt for generating an image
-        const prompt = `A stunning AI high quality image of a young sexy ${gender} person with professional look.`;
-        // Generate image using OpenAI
-        const response = yield openAI.images.generate({
+        // Safe, professional prompt
+        const prompt = `
+A realistic, high-quality professional profile photo of a ${gender} person.
+Clean background, studio lighting, confident expression.
+Modern business-casual attire.
+Photorealistic, LinkedIn-style headshot.
+`;
+        const imageResponse = yield openai.images.generate({
+            model: "gpt-image-1",
             prompt,
-            n: 1, // Generate 1 image
-            size: "512x512", // Specify desired image resolution
+            size: "512x512"
         });
-        // Check if an image was successfully generated
-        const imageUrl = (_a = response.data[0]) === null || _a === void 0 ? void 0 : _a.url;
+        const imageUrl = (_b = (_a = imageResponse.data) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.url;
         if (!imageUrl) {
-            res.status(500).json({
-                error: "Failed to generate an image. Please try again.",
-            });
+            (0, response_1.sendError)(req, res, 500, "Image generation failed. Please try again.");
             return;
         }
-        // Update user's profile picture in the database
         const updatedUser = yield User_1.default.findByIdAndUpdate(userId, { profilePicture: imageUrl }, { new: true });
-        // Respond with updated user information
-        res.status(200).json({
-            message: "Profile picture updated successfully.",
+        (0, response_1.sendSuccess)(req, res, 200, "Profile picture generated successfully.", {
             user: updatedUser,
         });
     }
     catch (error) {
-        // Pass errors to the global error handler
         next(error);
     }
 });
